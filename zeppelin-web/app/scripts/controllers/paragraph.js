@@ -25,7 +25,7 @@
  * @author anthonycorbacho
  */
 angular.module('zeppelinWebApp')
-        .controller('ParagraphCtrl', function($scope, $rootScope, $route, $window, $element, $routeParams, $location, $timeout, $compile) {
+  .controller('ParagraphCtrl', function($scope, $rootScope, $route, $window, $element, $routeParams, $location, $timeout, $compile) {
 
   $scope.paragraph = null;
   $scope.editor = null;
@@ -67,7 +67,7 @@ angular.module('zeppelinWebApp')
         try {
           $('#p'+$scope.paragraph.id+'_html').html($scope.paragraph.result.msg);
 
-          $('#p'+$scope.paragraph.id+'_html').find('pre code').each(function(i, e) { hljs.highlightBlock(e) });
+          $('#p'+$scope.paragraph.id+'_html').find('pre code').each(function(i, e) { hljs.highlightBlock(e); });
         } catch(err) {
           console.log('HTML rendering error %o', err);
         }
@@ -159,17 +159,17 @@ angular.module('zeppelinWebApp')
   // TODO: this may have impact on performance when there are many paragraphs in a note.
   $scope.$on('updateParagraph', function(event, data) {
     if (data.paragraph.id === $scope.paragraph.id &&
-         (
-             data.paragraph.dateCreated !== $scope.paragraph.dateCreated ||
-             data.paragraph.dateFinished !== $scope.paragraph.dateFinished ||
-             data.paragraph.dateStarted !== $scope.paragraph.dateStarted ||
-             data.paragraph.status !== $scope.paragraph.status ||
-             data.paragraph.jobName !== $scope.paragraph.jobName ||
-             data.paragraph.title !== $scope.paragraph.title ||
-             data.paragraph.errorMessage !== $scope.paragraph.errorMessage ||
-             !angular.equals(data.paragraph.settings, $scope.lastData.settings) ||
-             !angular.equals(data.paragraph.config, $scope.lastData.config)
-         )
+        (
+      data.paragraph.dateCreated !== $scope.paragraph.dateCreated ||
+      data.paragraph.dateFinished !== $scope.paragraph.dateFinished ||
+      data.paragraph.dateStarted !== $scope.paragraph.dateStarted ||
+      data.paragraph.status !== $scope.paragraph.status ||
+      data.paragraph.jobName !== $scope.paragraph.jobName ||
+      data.paragraph.title !== $scope.paragraph.title ||
+      data.paragraph.errorMessage !== $scope.paragraph.errorMessage ||
+      !angular.equals(data.paragraph.settings, $scope.lastData.settings) ||
+      !angular.equals(data.paragraph.config, $scope.lastData.config)
+    )
        ) {
       // store original data for comparison
       $scope.lastData.settings = angular.copy(data.paragraph.settings);
@@ -255,11 +255,11 @@ angular.module('zeppelinWebApp')
   $scope.runParagraph = function(data) {
     var parapgraphData = {op: 'RUN_PARAGRAPH',
                           data: {
-                              id: $scope.paragraph.id,
-                              title: $scope.paragraph.title,
-                              paragraph: data,
-                              config: $scope.paragraph.config,
-                              params: $scope.paragraph.settings.params
+                            id: $scope.paragraph.id,
+                            title: $scope.paragraph.title,
+                            paragraph: data,
+                            config: $scope.paragraph.config,
+                            params: $scope.paragraph.settings.params
                           }
                          };
     $rootScope.$emit('sendNewEvent', parapgraphData);
@@ -433,39 +433,39 @@ angular.module('zeppelinWebApp')
       }
 
       $scope.editor.setOptions({
-          enableBasicAutocompletion: true,
-          enableSnippets: false,
-          enableLiveAutocompletion:false
+        enableBasicAutocompletion: true,
+        enableSnippets: false,
+        enableLiveAutocompletion:false
       });
       var remoteCompleter = {
-          getCompletions : function(editor, session, pos, prefix, callback) {
-              if (!$scope.editor.isFocused() ){ return;}
+        getCompletions : function(editor, session, pos, prefix, callback) {
+          if (!$scope.editor.isFocused() ){ return;}
 
-              var buf = session.getTextRange(new Range(0, 0, pos.row, pos.column));
-              $rootScope.$emit('sendNewEvent', {
-                  op : 'COMPLETION',
-                  data : {
-                      id : $scope.paragraph.id,
-                      buf : buf,
-                      cursor : buf.length
-                  }
-              });
+          var buf = session.getTextRange(new Range(0, 0, pos.row, pos.column));
+          $rootScope.$emit('sendNewEvent', {
+            op : 'COMPLETION',
+            data : {
+              id : $scope.paragraph.id,
+              buf : buf,
+              cursor : buf.length
+            }
+          });
 
-              $scope.$on('completionList', function(event, data) {
-                  if (data.completions) {
-                      var completions = [];
-                      for (var c in data.completions) {
-                          var v = data.completions[c];
-                          completions.push({
-                              name:v,
-                              value:v,
-                              score:300
-                          });
-                      }
-                      callback(null, completions);
-                  }
-              });
-          }
+          $scope.$on('completionList', function(event, data) {
+            if (data.completions) {
+              var completions = [];
+              for (var c in data.completions) {
+                var v = data.completions[c];
+                completions.push({
+                  name:v,
+                  value:v,
+                  score:300
+                });
+              }
+              callback(null, completions);
+            }
+          });
+        }
       };
       langTools.addCompleter(remoteCompleter);
 
@@ -536,23 +536,23 @@ angular.module('zeppelinWebApp')
       $scope.editor.keyBinding.onCommandKey = function(e, hashId, keyCode) {
         if ($scope.editor.completer && $scope.editor.completer.activated) { // if autocompleter is active
         } else {
-            var numRows;
-            var currentRow;
-            if (keyCode === 38 || (keyCode === 80 && e.ctrlKey)) {  // UP
-                numRows = $scope.editor.getSession().getLength();
-                currentRow = $scope.editor.getCursorPosition().row;
-                if (currentRow === 0) {
-                    // move focus to previous paragraph
-                    $scope.$emit('moveFocusToPreviousParagraph', $scope.paragraph.id);
-                }
-            } else if (keyCode === 40 || (keyCode === 78 && e.ctrlKey)) {  // DOWN
-                numRows = $scope.editor.getSession().getLength();
-                currentRow = $scope.editor.getCursorPosition().row;
-                if (currentRow === numRows-1) {
-                    // move focus to next paragraph
-                    $scope.$emit('moveFocusToNextParagraph', $scope.paragraph.id);
-                }
+          var numRows;
+          var currentRow;
+          if (keyCode === 38 || (keyCode === 80 && e.ctrlKey)) {  // UP
+            numRows = $scope.editor.getSession().getLength();
+            currentRow = $scope.editor.getCursorPosition().row;
+            if (currentRow === 0) {
+              // move focus to previous paragraph
+              $scope.$emit('moveFocusToPreviousParagraph', $scope.paragraph.id);
             }
+          } else if (keyCode === 40 || (keyCode === 78 && e.ctrlKey)) {  // DOWN
+            numRows = $scope.editor.getSession().getLength();
+            currentRow = $scope.editor.getCursorPosition().row;
+            if (currentRow === numRows-1) {
+              // move focus to next paragraph
+              $scope.$emit('moveFocusToNextParagraph', $scope.paragraph.id);
+            }
+          }
         }
         this.origOnCommandKey(e, hashId, keyCode);
       };
@@ -776,7 +776,7 @@ angular.module('zeppelinWebApp')
           var v = row[index].value;
           if (getTableContentFormat(v) !== 'html') {
             v = v.replace(/[\u00A0-\u9999<>\&]/gim, function(i) {
-                return '&#'+i.charCodeAt(0)+';';
+              return '&#'+i.charCodeAt(0)+';';
             });
           }
           html += '      <td>'+formatTableContent(v)+'</td>';
@@ -787,24 +787,30 @@ angular.module('zeppelinWebApp')
       html += '</table>';
 
       $('#p' + $scope.paragraph.id + '_table').html(html);
-      $('#p' + $scope.paragraph.id + '_table').perfectScrollbar();
 
       // set table height
       var height = $scope.paragraph.config.graph.height;
-      $('#p'+$scope.paragraph.id+'_table').height(height);
+      $('#p' + $scope.paragraph.id+'_table').height(height);
 
       // use datatables
-      $('#p'+$scope.paragraph.id+'_table .table').DataTable( {
-        dom: 'Tt',
+      $('#p'+$scope.paragraph.id+'_table .table').DataTable({
+        dom: 'TtS',
         tableTools: {
-            "sSwfPath": "images/copy_csv_xls_pdf.swf",
-            "aButtons": [ "csv", "pdf" ]
+          'sSwfPath': 'images/copy_csv_xls_pdf.swf',
+          'aButtons': ['csv']
         },
         lengthChange: false,
         searching: false,
         ordering:  false,
-	paging: false
+        scrollY: height.toString() + 'px',
+        deferRender: true,
+        paging: false
       });
+
+      // Change height by removing Table Header and Button bar height
+      $('#p' + $scope.paragraph.id + '_table .dataTables_scrollBody').height(height - 90);
+      // Apply Perfect scrollbar to the Table
+      $('#p' + $scope.paragraph.id + '_table .dataTables_scrollBody').perfectScrollbar();
     };
 
     var retryRenderer = function() {
@@ -858,23 +864,23 @@ angular.module('zeppelinWebApp')
         var tooltipContent = '<h3>' + key + '</h3>';
         if ($scope.paragraph.config.graph.scatter.size &&
             $scope.isValidSizeOption($scope.paragraph.config.graph.scatter, $scope.paragraph.result.rows)) {
-              tooltipContent += '<p>' + data.point.size + '</p>';
+          tooltipContent += '<p>' + data.point.size + '</p>';
         }
 
         return tooltipContent;
       });
 
       $scope.chart[type].showDistX(true)
-                        .showDistY(true)
-                        //handle the problem of tooltip not showing when muliple points have same value.
-                        .scatter.useVoronoi(false);
+        .showDistY(true)
+      //handle the problem of tooltip not showing when muliple points have same value.
+        .scatter.useVoronoi(false);
     } else {
       var p = pivot(data);
       if (type === 'pieChart') {
         var d = pivotDataToD3ChartFormat(p, true).d3g;
 
         $scope.chart[type].x(function(d) { return d.label;})
-                          .y(function(d) { return d.value;});
+          .y(function(d) { return d.value;});
 
         if ( d.length > 0 ) {
           for ( var i=0; i<d[0].values.length ; i++) {
@@ -924,11 +930,11 @@ angular.module('zeppelinWebApp')
       }
 
       var chartEl = d3.select('#p'+$scope.paragraph.id+'_'+type+' svg')
-          .attr('height', $scope.paragraph.config.graph.height)
-          .datum(d3g)
-          .transition()
-          .duration(animationDuration)
-          .call($scope.chart[type]);
+      .attr('height', $scope.paragraph.config.graph.height)
+      .datum(d3g)
+      .transition()
+      .duration(animationDuration)
+      .call($scope.chart[type]);
       d3.select('#p'+$scope.paragraph.id+'_'+type+' svg').style.height = height+'px';
       nv.utils.windowResize($scope.chart[type].update);
     };
@@ -1145,10 +1151,10 @@ angular.module('zeppelinWebApp')
         // add key to schema
         if (!s[key.name]) {
           s[key.name] = {
-             order : k,
-             index : key.index,
-             type : 'key',
-             children : {}
+            order : k,
+            index : key.index,
+            type : 'key',
+            children : {}
           };
         }
         s = s[key.name].children;
@@ -1168,10 +1174,10 @@ angular.module('zeppelinWebApp')
         // add group to schema
         if (!s[groupKey]) {
           s[groupKey] = {
-             order : g,
-             index : group.index,
-             type : 'group',
-             children : {}
+            order : g,
+            index : group.index,
+            type : 'group',
+            children : {}
           };
         }
         s = s[groupKey].children;
@@ -1199,13 +1205,13 @@ angular.module('zeppelinWebApp')
         // add value to row
         if (!p[valueKey]) {
           p[valueKey] = {
-              value : (value.aggr !== 'count') ? row[value.index] : 1,
-              count: 1
+            value : (value.aggr !== 'count') ? row[value.index] : 1,
+            count: 1
           };
         } else {
           p[valueKey] = {
-              value : aggrFunc[value.aggr](p[valueKey].value, row[value.index], p[valueKey].count+1),
-              count : (aggrFuncDiv[value.aggr]) ?  p[valueKey].count+1 : p[valueKey].count
+            value : aggrFunc[value.aggr](p[valueKey].value, row[value.index], p[valueKey].count+1),
+            count : (aggrFuncDiv[value.aggr]) ?  p[valueKey].count+1 : p[valueKey].count
           };
         }
       }
@@ -1400,10 +1406,10 @@ angular.module('zeppelinWebApp')
 
       if(!rows[key]) {
         rows[key] = {
-            x : xValue,
-            y : yValue,
-            group : grp,
-            size : 1
+          x : xValue,
+          y : yValue,
+          group : grp,
+          size : 1
         };
       } else {
         rows[key].size++;
@@ -1596,8 +1602,8 @@ angular.module('zeppelinWebApp')
 
     //check if all existing fields are discrete
     var isAllDiscrete = ((options.xAxis && options.yAxis && isDiscrete(xValues) && isDiscrete(yValues)) ||
-        (!options.xAxis && isDiscrete(yValues)) ||
-        (!options.yAxis && isDiscrete(xValues)));
+                         (!options.xAxis && isDiscrete(yValues)) ||
+                         (!options.yAxis && isDiscrete(xValues)));
 
     if (isAllDiscrete) {
       return false;

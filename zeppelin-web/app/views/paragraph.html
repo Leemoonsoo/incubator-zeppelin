@@ -103,7 +103,7 @@ limitations under the License.
       <div id="{{paragraph.id}}_switch"
            ng-if="paragraph.result.type == 'TABLE' && !asIframe && !viewOnly"
            class="btn-group"
-           style='margin-bottom: 10px;'>
+           style='margin-bottom: 10px; z-index: 5;'>
         <button type="button" class="btn btn-default btn-sm"
                 ng-class="{'active': isGraphMode('table')}"
                 ng-click="setGraphMode('table', true)" ><i class="fa fa-table"></i>
@@ -298,7 +298,7 @@ limitations under the License.
 
       <div id="p{{paragraph.id}}_graph"
            class="graphContainer"
-           ng-class="{'noOverflow': getGraphMode()=='table'}"
+           ng-class="{'noOverflow alignTableExportCSV': getGraphMode()=='table'}"
            ng-if="getResultType()=='TABLE'"
            allowresize="{{!asIframe && !viewOnly}}"
            resizable on-resize="setGraphHeight();">

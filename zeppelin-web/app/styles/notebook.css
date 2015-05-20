@@ -440,8 +440,43 @@
 
 .graphContainer .table {
   overflow: hidden;
-  margin-bottom: 5px !important;
 }
+
+/* Add CSS to Style Datatables */
+
+table.dataTable thead th, table.dataTable thead td {
+  border: none !important;
+}
+
+.dataTables_wrapper.no-footer .dataTables_scrollBody {
+  border: none !important;
+}
+
+.dataTables_scrollBody {
+  overflow: hidden !important;
+  position: relative;
+}
+
+.DTTT.btn-group {
+  float: right;
+}
+
+.DTTT_button_csv {
+  padding: 4px 9px;
+}
+
+.DTTT_button_csv span {
+    margin: 0 !important;
+}
+
+.alignTableExportCSV {
+  position: relative;
+  top: -40px;
+  z-index: 1;
+}
+
+
+/* End of Datatables CSS */
 
 .allFields {
   margin-bottom: 10px;
