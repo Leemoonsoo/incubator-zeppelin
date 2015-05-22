@@ -810,7 +810,7 @@ angular.module('zeppelinWebApp')
       // Change height by removing Table Header and Button bar height
       $('#p' + $scope.paragraph.id + '_table .dataTables_scrollBody').height(height - 90);
       // Apply Perfect scrollbar to the Table
-      $('#p' + $scope.paragraph.id + '_table .dataTables_scrollBody').perfectScrollbar();
+      $('#p' + $scope.paragraph.id + '_table .dataTables_scrollBody').perfectScrollbar({minScrollbarLength: 20});
     };
 
     var retryRenderer = function() {
