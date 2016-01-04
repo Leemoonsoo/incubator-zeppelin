@@ -381,7 +381,12 @@ public class RemoteInterpreterServer
 
 
   private InterpreterOutput createInterpreterOutput() {
-    return new InterpreterOutput();
+    return new InterpreterOutput(new InterpreterOutputNewlineListener() {
+      @Override
+      public void onNewLineDetected(byte[] line) {
+
+      }
+    });
   }
 
 
