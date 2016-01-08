@@ -275,7 +275,6 @@ angular.module('zeppelinWebApp')
   $scope.$on('updateParagraphOutput', function(event, data) {
     if ($scope.paragraph.id === data.paragraphId) {
       $scope.renderText(data.data, false);
-      console.log('UpdateParagraphOutputReceived -> data %o', data.data);
     }
   });
 
