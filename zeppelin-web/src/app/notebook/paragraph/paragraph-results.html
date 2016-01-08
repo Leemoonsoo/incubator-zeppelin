@@ -25,6 +25,7 @@ limitations under the License.
 
   <div id="p{{paragraph.id}}_text"
        class="text"
+       ng-bind="paragraph.result.msg"
        ng-if="getResultType() == 'TEXT'"></div>
 
   <div id="p{{paragraph.id}}_html"

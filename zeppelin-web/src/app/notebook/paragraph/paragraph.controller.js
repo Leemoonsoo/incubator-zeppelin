@@ -54,13 +54,11 @@ angular.module('zeppelinWebApp')
       $scope.renderHtml();
     } else if ($scope.getResultType() === 'ANGULAR') {
       $scope.renderAngular();
-    } else if ($scope.getResultType() === 'TEXT') {
-      $scope.renderText();
     }
   };
 
-    $scope.renderHtml = function() {
-      var retryRenderer = function() {
+  $scope.renderHtml = function() {
+    var retryRenderer = function() {
       if (angular.element('#p' + $scope.paragraph.id + '_html').length) {
         try {
           angular.element('#p' + $scope.paragraph.id + '_html').html($scope.paragraph.result.msg);
@@ -95,43 +93,16 @@ angular.module('zeppelinWebApp')
     $timeout(retryRenderer);
   };
 
-  $scope.renderText = function() {
-    var retryRenderer = function() {
-      if (!$scope.paragraph.result || !$scope.paragraph.result.msg) {
-        // nothing to render
-        return;
-      }
-
-      var textEl = angular.element('#p' + $scope.paragraph.id + '_text');
-      if (textEl.length) {
-        // clear all lines before append
-        $scope.clearTextOutput();
-        $scope.appendTextOutput($scope.paragraph.result.msg);
-      } else {
-        $timeout(retryRenderer, 10);
-      }
-    };
-    $timeout(retryRenderer);
-  };
-
-  $scope.clearTextOutput = function() {
-    var textEl = angular.element('#p' + $scope.paragraph.id + '_text');
-    if (textEl.length) {
-      textEl.children().remove();
+  $scope.renderText = function(text, append) {
+    if (!$scope.paragraph.result) {
+      $scope.paragraph.result = {type: 'TEXT', msg: ''};
+    }
+    if (append) {
+      $scope.paragraph.result.msg = $scope.paragraph.result.msg + text;
+    } else {
+      $scope.paragraph.result.msg = text;
     }
   };
-
-  $scope.appendTextOutput = function(msg) {
-    var textEl = angular.element('#p' + $scope.paragraph.id + '_text');
-    if (textEl.length) {
-      var lines = msg.split('\n');
-      for (var i=0; i < lines.length; i++) {
-        textEl.append(angular.element('<div></div>').text(lines[i]));
-      }
-    }
-  };
-
-
 
   var initializeDefault = function() {
     var config = $scope.paragraph.config;
@@ -275,9 +246,8 @@ angular.module('zeppelinWebApp')
       } else if (newType === 'ANGULAR' && resultRefreshed) {
         $scope.renderAngular();
       } else if (newType === 'TEXT' && resultRefreshed) {
-        $scope.renderText();
-      } else if (newType === 'TEXT' && !$scope.paragraph.result) {
-        $scope.clearTextOutput();
+        console.log('PARAGRAPH UPDATE RenderText');
+        $scope.renderText(data.paragraph.result.msg, false);
       }
 
       if (statusChanged || resultRefreshed) {
@@ -298,14 +268,14 @@ angular.module('zeppelinWebApp')
 
   $scope.$on('appendParagraphOutput', function(event, data) {
     if ($scope.paragraph.id === data.paragraphId) {
-      $scope.appendTextOutput(data.data);
+      $scope.renderText(data.data, true);
     }
   });
 
   $scope.$on('updateParagraphOutput', function(event, data) {
     if ($scope.paragraph.id === data.paragraphId) {
-      $scope.clearTextOutput(data.data);
-      $scope.appendTextOutput(data.data);
+      $scope.renderText(data.data, false);
+      console.log('UpdateParagraphOutputReceived -> data %o', data.data);
     }
   });
 
