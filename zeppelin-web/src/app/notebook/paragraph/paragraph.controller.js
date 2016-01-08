@@ -37,6 +37,9 @@ angular.module('zeppelinWebApp')
     $scope.colWidthOption = [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ];
     $scope.showTitleEditor = false;
     $scope.paragraphFocused = false;
+    if (newParagraph.focus) {
+      $scope.paragraphFocused = true;
+    }
 
     if (!$scope.paragraph.config) {
       $scope.paragraph.config = {};
@@ -90,6 +93,16 @@ angular.module('zeppelinWebApp')
     $timeout(retryRenderer);
   };
 
+  $scope.renderText = function(text, append) {
+    if (!$scope.paragraph.result) {
+      $scope.paragraph.result = {type: 'TEXT', msg: ''};
+    }
+    if (append) {
+      $scope.paragraph.result.msg = $scope.paragraph.result.msg + text;
+    } else {
+      $scope.paragraph.result.msg = text;
+    }
+  };
 
   var initializeDefault = function() {
     var config = $scope.paragraph.config;
@@ -173,6 +186,7 @@ angular.module('zeppelinWebApp')
       var oldGraphMode = $scope.getGraphMode();
       var newGraphMode = $scope.getGraphMode(data.paragraph);
       var resultRefreshed = (data.paragraph.dateFinished !== $scope.paragraph.dateFinished);
+
       var statusChanged = (data.paragraph.status !== $scope.paragraph.status);
 
       //console.log("updateParagraph oldData %o, newData %o. type %o -> %o, mode %o -> %o", $scope.paragraph, data, oldType, newType, oldGraphMode, newGraphMode);
@@ -231,6 +245,9 @@ angular.module('zeppelinWebApp')
         $scope.renderHtml();
       } else if (newType === 'ANGULAR' && resultRefreshed) {
         $scope.renderAngular();
+      } else if (newType === 'TEXT' && resultRefreshed) {
+        console.log('PARAGRAPH UPDATE RenderText');
+        $scope.renderText(data.paragraph.result.msg, false);
       }
 
       if (statusChanged || resultRefreshed) {
@@ -244,8 +261,21 @@ angular.module('zeppelinWebApp')
           }, 500);
         }
       }
+
     }
 
+  });
+
+  $scope.$on('appendParagraphOutput', function(event, data) {
+    if ($scope.paragraph.id === data.paragraphId) {
+      $scope.renderText(data.data, true);
+    }
+  });
+
+  $scope.$on('updateParagraphOutput', function(event, data) {
+    if ($scope.paragraph.id === data.paragraphId) {
+      $scope.renderText(data.data, false);
+    }
   });
 
   $scope.isRunning = function() {
@@ -282,6 +312,15 @@ angular.module('zeppelinWebApp')
     var newParams = angular.copy($scope.paragraph.settings.params);
     var newConfig = angular.copy($scope.paragraph.config);
     commitParagraph($scope.paragraph.title, $scope.paragraph.text, newConfig, newParams);
+  };
+
+  $scope.run = function() {
+    var editorValue = $scope.editor.getValue();
+    if (editorValue) {
+      if (!($scope.paragraph.status === 'RUNNING' || $scope.paragraph.status === 'PENDING')) {
+        $scope.runParagraph(editorValue);
+      }
+    }
   };
 
   $scope.moveUp = function() {
@@ -491,7 +530,9 @@ angular.module('zeppelinWebApp')
       $scope.editor.setHighlightGutterLine(false);
       $scope.editor.getSession().setUseWrapMode(true);
       $scope.editor.setTheme('ace/theme/chrome');
-      $scope.editor.focus();
+      if ($scope.paragraphFocused) {
+        $scope.editor.focus();
+      }
 
       autoAdjustEditorHeight(_editor.container.id);
       angular.element(window).resize(function() {
@@ -591,19 +632,6 @@ angular.module('zeppelinWebApp')
 
       $scope.setParagraphMode($scope.editor.getSession(), $scope.editor.getSession().getValue());
 
-      $scope.editor.commands.addCommand({
-        name: 'run',
-        bindKey: {win: 'Shift-Enter', mac: 'Shift-Enter'},
-        exec: function(editor) {
-          var editorValue = editor.getValue();
-          if (editorValue) {
-            if (!($scope.paragraph.status === 'RUNNING' || $scope.paragraph.status === 'PENDING')) {
-              $scope.runParagraph(editorValue);
-            }
-          }
-        },
-        readOnly: false
-      });
 
       // autocomplete on '.'
       /*
@@ -616,6 +644,10 @@ angular.module('zeppelinWebApp')
     }
       });
       */
+
+      // remove binding
+      $scope.editor.commands.bindKey('ctrl-alt-n.', null);
+
 
       // autocomplete on 'ctrl+.'
       $scope.editor.commands.bindKey('ctrl-.', 'startAutocomplete');
@@ -636,7 +668,7 @@ angular.module('zeppelinWebApp')
           var numRows;
           var currentRow;
 
-          if (keyCode === 38 || (keyCode === 80 && e.ctrlKey)) {  // UP
+          if (keyCode === 38 || (keyCode === 80 && e.ctrlKey && !e.altKey)) {  // UP
             numRows = $scope.editor.getSession().getLength();
             currentRow = $scope.editor.getCursorPosition().row;
             if (currentRow === 0) {
@@ -645,7 +677,7 @@ angular.module('zeppelinWebApp')
             } else {
               $scope.scrollToCursor($scope.paragraph.id, -1);
             }
-          } else if (keyCode === 40 || (keyCode === 78 && e.ctrlKey)) {  // DOWN
+          } else if (keyCode === 40 || (keyCode === 78 && e.ctrlKey && !e.altKey)) {  // DOWN
             numRows = $scope.editor.getSession().getLength();
             currentRow = $scope.editor.getCursorPosition().row;
             if (currentRow === numRows-1) {
@@ -766,21 +798,93 @@ angular.module('zeppelinWebApp')
     }
   });
 
-  $scope.$on('focusParagraph', function(event, paragraphId, cursorPos) {
+  $scope.$on('keyEvent', function(event, keyEvent) {
+    if ($scope.paragraphFocused) {
+
+      var paragraphId = $scope.paragraph.id;
+      var keyCode = keyEvent.keyCode;
+      var noShortcutDefined = false;
+      var editorHide = $scope.paragraph.config.editorHide;
+
+      if (editorHide && (keyCode === 38 || (keyCode === 80 && keyEvent.ctrlKey && !keyEvent.altKey))) { // up
+        // move focus to previous paragraph
+        $scope.$emit('moveFocusToPreviousParagraph', paragraphId);
+      } else if (editorHide && (keyCode === 40 || (keyCode === 78 && keyEvent.ctrlKey && !keyEvent.altKey))) { // down
+        // move focus to next paragraph
+        $scope.$emit('moveFocusToNextParagraph', paragraphId);
+      } else if (keyEvent.shiftKey && keyCode === 13) { // Shift + Enter
+        $scope.run();
+      } else if (keyEvent.ctrlKey && keyEvent.altKey && keyCode === 67) { // Ctrl + Alt + c
+        $scope.cancelParagraph();
+      } else if (keyEvent.ctrlKey && keyEvent.altKey && keyCode === 68) { // Ctrl + Alt + d
+        $scope.removeParagraph();
+      } else if (keyEvent.ctrlKey && keyEvent.altKey && keyCode === 75) { // Ctrl + Alt + k
+        $scope.moveUp();
+      } else if (keyEvent.ctrlKey && keyEvent.altKey && keyCode === 74) { // Ctrl + Alt + j
+        $scope.moveDown();
+      } else if (keyEvent.ctrlKey && keyEvent.altKey && keyCode === 66) { // Ctrl + Alt + b
+        $scope.insertNew();
+      } else if (keyEvent.ctrlKey && keyEvent.altKey && keyCode === 79) { // Ctrl + Alt + o
+        $scope.toggleOutput();
+      } else if (keyEvent.ctrlKey && keyEvent.altKey && keyCode === 69) { // Ctrl + Alt + e
+        $scope.toggleEditor();
+      } else if (keyEvent.ctrlKey && keyEvent.altKey && keyCode === 77) { // Ctrl + Alt + m
+        if ($scope.paragraph.config.lineNumbers) {
+          $scope.hideLineNumbers();
+        } else {
+          $scope.showLineNumbers();
+        }
+      } else if (keyEvent.ctrlKey && keyEvent.altKey && ((keyCode >= 48 && keyCode <=57) || keyCode === 189 || keyCode === 187)) { // Ctrl + Alt + [1~9,0,-,=]
+        var colWidth = 12;
+        if (keyCode === 48) {
+          colWidth = 10;
+        } else if (keyCode === 189) {
+          colWidth = 11;
+        } else if (keyCode === 187) {
+          colWidth = 12;
+        } else {
+          colWidth = keyCode - 48;
+        }
+        $scope.paragraph.config.colWidth = colWidth;
+        $scope.changeColWidth();
+      } else if (keyEvent.ctrlKey && keyEvent.altKey && keyCode === 84) { // Ctrl + Alt + t
+        if ($scope.paragraph.config.title) {
+          $scope.hideTitle();
+        } else {
+          $scope.showTitle();
+        }
+      } else {
+        noShortcutDefined = true;
+      }
+
+      if (!noShortcutDefined) {
+        keyEvent.preventDefault();
+      }
+    }
+  });
+
+  $scope.$on('focusParagraph', function(event, paragraphId, cursorPos, mouseEvent) {
     if ($scope.paragraph.id === paragraphId) {
       // focus editor
-      $scope.editor.focus();
-
-      // move cursor to the first row (or the last row)
-      var row;
-      if (cursorPos >= 0) {
-        row = cursorPos;
-        $scope.editor.gotoLine(row, 0);
-      } else {
-        row = $scope.editor.session.getLength();
-        $scope.editor.gotoLine(row, 0);
+      if (!$scope.paragraph.config.editorHide) {
+        if (!mouseEvent) {
+          $scope.editor.focus();
+          // move cursor to the first row (or the last row)
+          var row;
+          if (cursorPos >= 0) {
+            row = cursorPos;
+            $scope.editor.gotoLine(row, 0);
+          } else {
+            row = $scope.editor.session.getLength();
+            $scope.editor.gotoLine(row, 0);
+          }
+          $scope.scrollToCursor($scope.paragraph.id, 0);
+        }
       }
-      $scope.scrollToCursor($scope.paragraph.id, 0);
+      $scope.handleFocus(true);
+    } else {
+      $scope.editor.blur();
+      $scope.handleFocus(false);
     }
   });
 
@@ -882,7 +986,7 @@ angular.module('zeppelinWebApp')
       clearUnknownColsFromGraphOption();
       // set graph height
       var height = $scope.paragraph.config.graph.height;
-      angular.element('#p' + $scope.paragraph.id + '_graph').height(height);
+      angular.element('#p' + $scope.paragraph.id + '_resize').height(height);
 
       if (!type || type === 'table') {
         setTable($scope.paragraph.result, refresh);
@@ -942,8 +1046,7 @@ angular.module('zeppelinWebApp')
 
     var renderTable = function() {
       var html = '';
-
-      html += '<table class="table table-hover table-condensed" style="top: 0; position: absolute;">';
+      html += '<table class="table table-hover table-condensed">';
       html += '  <thead>';
       html += '    <tr style="background-color: #F6F6F6; font-weight: bold;">';
       for (var titleIndex in $scope.paragraph.result.columnNames) {
@@ -951,10 +1054,7 @@ angular.module('zeppelinWebApp')
       }
       html += '    </tr>';
       html += '  </thead>';
-      html += '</table>';
-
-      html += '<table class="table table-hover table-condensed" style="margin-top: 31px;">';
-
+      html += '  <tbody>';
       for (var r in $scope.paragraph.result.msgTable) {
         var row = $scope.paragraph.result.msgTable[r];
         html += '    <tr>';
@@ -969,19 +1069,38 @@ angular.module('zeppelinWebApp')
         }
         html += '    </tr>';
       }
-
+      html += '  </tbody>';
       html += '</table>';
 
       angular.element('#p' + $scope.paragraph.id + '_table').html(html);
       if ($scope.paragraph.result.msgTable.length > 10000) {
         angular.element('#p' + $scope.paragraph.id + '_table').css('overflow', 'scroll');
+        // set table height
+        var height = $scope.paragraph.config.graph.height;
+        angular.element('#p' + $scope.paragraph.id + '_table').css('height', height);
       } else {
+        var dataTable = angular.element('#p' + $scope.paragraph.id + '_table .table');
+        dataTable.floatThead({
+          scrollContainer: function (dataTable) {
+            return angular.element('#p' + $scope.paragraph.id + '_table');
+          }
+        });
+        angular.element('#p' + $scope.paragraph.id + '_table .table').on('remove', function () {
+          angular.element('#p' + $scope.paragraph.id + '_table .table').floatThead('destroy');
+        });
+
+        angular.element('#p' + $scope.paragraph.id + '_table').css('position', 'relative');
+        angular.element('#p' + $scope.paragraph.id + '_table').css('height', '100%');
+        angular.element('#p' + $scope.paragraph.id + '_table').perfectScrollbar('destroy');
         angular.element('#p' + $scope.paragraph.id + '_table').perfectScrollbar();
+        angular.element('.ps-scrollbar-y-rail').css('z-index', '1002');
+
+        // set table height
+        var psHeight = $scope.paragraph.config.graph.height;
+        angular.element('#p' + $scope.paragraph.id + '_table').css('height', psHeight);
+        angular.element('#p' + $scope.paragraph.id + '_table').perfectScrollbar('update');
       }
 
-      // set table height
-      var height = $scope.paragraph.config.graph.height;
-      angular.element('#p' + $scope.paragraph.id + '_table').height(height);
     };
 
     var retryRenderer = function() {
@@ -1801,9 +1920,22 @@ angular.module('zeppelinWebApp')
     return true;
   };
 
-  $scope.setGraphHeight = function() {
-    var height = angular.element('#p' + $scope.paragraph.id + '_graph').height();
+  $scope.resizeParagraph = function(width, height) {
+    if ($scope.paragraph.config.colWidth !== width) {
 
+        $scope.paragraph.config.colWidth = width;
+        $scope.changeColWidth();
+        $timeout(function() {
+          autoAdjustEditorHeight($scope.paragraph.id + '_editor');
+          $scope.changeHeight(height);
+        }, 200);
+
+    } else {
+      $scope.changeHeight(height);
+    }
+  };
+
+  $scope.changeHeight = function(height) {
     var newParams = angular.copy($scope.paragraph.settings.params);
     var newConfig = angular.copy($scope.paragraph.config);
 

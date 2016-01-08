@@ -49,6 +49,7 @@ import org.apache.zeppelin.display.AngularObjectRegistryListener;
 import org.apache.zeppelin.interpreter.Interpreter.RegisteredInterpreter;
 import org.apache.zeppelin.interpreter.remote.RemoteAngularObjectRegistry;
 import org.apache.zeppelin.interpreter.remote.RemoteInterpreter;
+import org.apache.zeppelin.interpreter.remote.RemoteInterpreterProcessListener;
 import org.apache.zeppelin.scheduler.Job;
 import org.apache.zeppelin.scheduler.Job.Status;
 import org.slf4j.Logger;
@@ -80,20 +81,25 @@ public class InterpreterFactory {
   private InterpreterOption defaultOption;
 
   AngularObjectRegistryListener angularObjectRegistryListener;
+  private final RemoteInterpreterProcessListener remoteInterpreterProcessListener;
 
   public InterpreterFactory(ZeppelinConfiguration conf,
-      AngularObjectRegistryListener angularObjectRegistryListener)
+                            AngularObjectRegistryListener angularObjectRegistryListener,
+                            RemoteInterpreterProcessListener remoteInterpreterProcessListener)
       throws InterpreterException, IOException {
-    this(conf, new InterpreterOption(true), angularObjectRegistryListener);
+    this(conf, new InterpreterOption(true),
+            angularObjectRegistryListener, remoteInterpreterProcessListener);
   }
 
 
   public InterpreterFactory(ZeppelinConfiguration conf, InterpreterOption defaultOption,
-      AngularObjectRegistryListener angularObjectRegistryListener)
+      AngularObjectRegistryListener angularObjectRegistryListener,
+                            RemoteInterpreterProcessListener remoteInterpreterProcessListener)
       throws InterpreterException, IOException {
     this.conf = conf;
     this.defaultOption = defaultOption;
     this.angularObjectRegistryListener = angularObjectRegistryListener;
+    this.remoteInterpreterProcessListener = remoteInterpreterProcessListener;
     String replsConf = conf.getString(ConfVars.ZEPPELIN_INTERPRETERS);
     interpreterClassList = replsConf.split(",");
 
@@ -510,7 +516,8 @@ public class InterpreterFactory {
 
   /**
    * Change interpreter property and restart
-   * @param name
+   * @param id
+   * @param option
    * @param properties
    * @throws IOException
    */
@@ -519,6 +526,9 @@ public class InterpreterFactory {
     synchronized (interpreterSettings) {
       InterpreterSetting intpsetting = interpreterSettings.get(id);
       if (intpsetting != null) {
+
+        stopJobAllInterpreter(intpsetting);
+
         intpsetting.getInterpreterGroup().close();
         intpsetting.getInterpreterGroup().destroy();
 
@@ -541,20 +551,7 @@ public class InterpreterFactory {
       InterpreterSetting intpsetting = interpreterSettings.get(id);
       if (intpsetting != null) {
 
-        for (Interpreter intp : intpsetting.getInterpreterGroup()) {
-          for (Job job : intp.getScheduler().getJobsRunning()) {
-            job.abort();
-            job.setStatus(Status.ABORT);
-            logger.info("Job " + job.getJobName() + " aborted ");
-          }
-              
-          for (Job job : intp.getScheduler().getJobsWaiting()) {
-            job.abort();
-            job.setStatus(Status.ABORT);
-            logger.info("Job " + job.getJobName() + " aborted ");
-          }
-        }
-
+        stopJobAllInterpreter(intpsetting);
 
         intpsetting.getInterpreterGroup().close();
         intpsetting.getInterpreterGroup().destroy();
@@ -570,6 +567,22 @@ public class InterpreterFactory {
     }
   }
 
+  private void stopJobAllInterpreter(InterpreterSetting intpsetting) {
+    if (intpsetting != null) {
+      for (Interpreter intp : intpsetting.getInterpreterGroup()) {
+        for (Job job : intp.getScheduler().getJobsRunning()) {
+          job.abort();
+          job.setStatus(Status.ABORT);
+          logger.info("Job " + job.getJobName() + " aborted ");
+        }
+        for (Job job : intp.getScheduler().getJobsWaiting()) {
+          job.abort();
+          job.setStatus(Status.ABORT);
+          logger.info("Job " + job.getJobName() + " aborted ");
+        }
+      }
+    }
+  }
 
   public void close() {
     List<Thread> closeThreads = new LinkedList<Thread>();
@@ -663,7 +676,7 @@ public class InterpreterFactory {
     int connectTimeout = conf.getInt(ConfVars.ZEPPELIN_INTERPRETER_CONNECT_TIMEOUT);
     LazyOpenInterpreter intp = new LazyOpenInterpreter(new RemoteInterpreter(
         property, className, conf.getInterpreterRemoteRunnerPath(),
-        interpreterPath, connectTimeout));
+        interpreterPath, connectTimeout, remoteInterpreterProcessListener));
     return intp;
   }
 
