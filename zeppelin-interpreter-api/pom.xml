@@ -140,6 +140,10 @@
               <pattern>com.esotericsoftware</pattern>
               <shadedPattern>${shaded.dependency.prefix}.com.esotericsoftware</shadedPattern>
             </relocation>
+            <relocation>
+              <pattern>org.eclipse</pattern>
+              <shadedPattern>${shaded.dependency.prefix}.org.eclipse</shadedPattern>
+            </relocation>
           </relocations>
         </configuration>
         <executions>
