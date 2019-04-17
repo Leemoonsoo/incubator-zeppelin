@@ -143,7 +143,7 @@ public class RemoteInterpreterServer extends Thread
   ClusterManagerClient clusterManagerClient = ClusterManagerClient.getInstance();
   ZeppelinConfiguration zconf = ZeppelinConfiguration.create();
 
-  private RestApiServer restApiServer = RestApiServer.singleton();
+  private RestApiServer restApiServer;
 
   public RemoteInterpreterServer(String intpEventServerHost,
                                  int intpEventServerPort,
@@ -193,6 +193,9 @@ public class RemoteInterpreterServer extends Thread
     remoteWorksResponsePool = Collections.synchronizedMap(new HashMap<String, Object>());
 
     clusterManagerClient.start(interpreterGroupId);
+
+    // initialize restApiServer for serving
+    restApiServer = RestApiServer.singleton();
   }
 
   @Override
