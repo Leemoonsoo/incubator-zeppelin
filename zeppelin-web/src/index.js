@@ -36,6 +36,8 @@ import './app/visualization/builtins/visualization-linechart.js';
 import './app/visualization/builtins/visualization-scatterchart.js';
 
 import './app/jobmanager/jobmanager.component.js';
+import './app/serving/serving.controller.js';
+import './app/serving/metric/serving-metric.component.js';
 import './app/interpreter/interpreter.controller.js';
 import './app/interpreter/interpreter.filter.js';
 import './app/interpreter/interpreter-item.directive.js';
@@ -53,6 +55,8 @@ import './app/notebook/save-as/browser-detect.service.js';
 import './app/notebook/elastic-input/elastic-input.controller.js';
 import './app/notebook/dropdown-input/dropdown-input.directive.js';
 import './app/notebook/note-var-share.service.js';
+import './app/notebook/note-test-status/note-test-status.component';
+import './app/notebook/note-serving-status/note-serving-status.component';
 import './app/notebook-repository/notebook-repository.controller.js';
 import './app/search/result-list.controller.js';
 import './app/search/search.service.js';

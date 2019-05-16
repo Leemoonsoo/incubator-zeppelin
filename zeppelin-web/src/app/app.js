@@ -107,9 +107,18 @@ let zeppelinWebApp = angular.module('zeppelinWebApp', requiredModules)
         controller: 'NotebookCtrl',
         resolve: visBundleLoad,
       })
+      .when('/notebook/:noteId/task/:revisionId', {
+        templateUrl: 'app/notebook/notebook.html',
+        controller: 'NotebookCtrl',
+        resolve: visBundleLoad,
+      })
       .when('/jobmanager', {
         templateUrl: 'app/jobmanager/jobmanager.html',
         controller: 'JobManagerCtrl',
+      })
+      .when('/serving', {
+        templateUrl: 'app/serving/serving.html',
+        controller: 'ServingCtrl',
       })
       .when('/interpreter', {
         templateUrl: 'app/interpreter/interpreter.html',
