@@ -40,12 +40,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.TimeoutException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 public class IPythonInterpreterTest extends BasePythonInterpreterTest {
+  private static Logger LOGGER = LoggerFactory.getLogger(IPythonInterpreterTest.class);
   private HttpClient client;
 
   protected Properties initIntpProperties() {
@@ -345,7 +348,7 @@ public class IPythonInterpreterTest extends BasePythonInterpreterTest {
     InterpreterResult result = interpreter.interpret(
             "def stringlen(d):\n  return len(d[\"input\"])\nz.addRestApi(\"len\", stringlen)\n",
             context);
-    System.out.println("testAddRestApiJsonRequest=" + result.message().toString());
+    LOGGER.info("testAddRestApiJsonRequest=" + result.message().toString());
     waitForResult(result, Code.SUCCESS);
     waitForRestApiServerEndpointReady("len");
 
