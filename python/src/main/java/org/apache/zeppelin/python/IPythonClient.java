@@ -74,7 +74,8 @@ public class IPythonClient {
   }
 
   public void shutdown() throws InterruptedException {
-    channel.shutdown().awaitTermination(5, TimeUnit.SECONDS);
+    boolean shutdown = channel.shutdown().awaitTermination(10, TimeUnit.SECONDS);
+    LOGGER.info("Shutdown ipython client channel " + shutdown);
   }
 
   // execute the code and make the output as streaming by writing it to InterpreterOutputStream
