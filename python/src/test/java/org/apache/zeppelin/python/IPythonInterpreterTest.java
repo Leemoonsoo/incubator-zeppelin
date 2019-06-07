@@ -345,6 +345,7 @@ public class IPythonInterpreterTest extends BasePythonInterpreterTest {
     InterpreterResult result = interpreter.interpret(
             "def stringlen(d):\n  return len(d[\"input\"])\nz.addRestApi(\"len\", stringlen)\n",
             context);
+    System.out.println("testAddRestApiJsonRequest=" + result.message().toString());
     waitForResult(result, Code.SUCCESS);
     waitForRestApiServerEndpointReady("len");
 
