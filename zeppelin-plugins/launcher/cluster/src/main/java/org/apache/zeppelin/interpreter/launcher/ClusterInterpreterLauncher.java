@@ -189,6 +189,7 @@ public class ClusterInterpreterLauncher extends StandardInterpreterLauncher
           context.getZeppelinServerRPCPort(),
           context.getZeppelinServerHost(),
           zConf.getInterpreterPortRange(),
+          zConf.getInterpreterRestApiServerPort(),
           zConf.getInterpreterDir() + "/" + intpSetGroupName,
           localRepoPath,
           buildEnvFromProperties(context),
