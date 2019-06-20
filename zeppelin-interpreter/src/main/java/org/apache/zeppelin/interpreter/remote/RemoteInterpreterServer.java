@@ -261,6 +261,13 @@ public class RemoteInterpreterServer extends Thread
   @Override
   public void shutdown() throws TException {
     logger.info("Shutting down...");
+
+    try {
+      restApiServer.shutdown();
+    } catch (Exception e) {
+      logger.error("Failed to stop restApiServer", e);
+    }
+
     if (interpreterGroup != null) {
       synchronized (interpreterGroup) {
         for (List<Interpreter> session : interpreterGroup.values()) {
