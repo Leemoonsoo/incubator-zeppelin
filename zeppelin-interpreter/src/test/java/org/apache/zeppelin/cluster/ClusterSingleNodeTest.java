@@ -59,6 +59,7 @@ public class ClusterSingleNodeTest {
     clusterServer.start();
 
     // mock cluster manager client
+    ClusterManagerClient.reset();
     clusterClient = ClusterManagerClient.getInstance();
     clusterClient.start(metaKey);
 

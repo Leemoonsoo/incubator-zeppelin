@@ -16,6 +16,7 @@
  */
 package org.apache.zeppelin.cluster;
 
+import com.google.common.annotations.VisibleForTesting;
 import io.atomix.primitive.PrimitiveState;
 
 import static org.apache.zeppelin.cluster.meta.ClusterMetaType.INTP_PROCESS_META;
@@ -32,6 +33,14 @@ public class ClusterManagerClient extends ClusterManager {
         instance = new ClusterManagerClient();
       }
       return instance;
+    }
+  }
+
+  @VisibleForTesting
+  public static void reset() {
+    if (instance != null) {
+      instance.shutdown();
+      instance = null;
     }
   }
 
@@ -70,7 +79,10 @@ public class ClusterManagerClient extends ClusterManager {
     if (!zconf.isClusterMode()) {
       return;
     }
-    clusterMonitor.shutdown();
+
+    if (clusterMonitor != null) {
+      clusterMonitor.shutdown();
+    }
 
     super.shutdown();
   }

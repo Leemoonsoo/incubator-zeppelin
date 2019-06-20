@@ -164,6 +164,7 @@ public class RemoteInterpreterServer extends Thread
       throws TTransportException, IOException {
     logger.info("Starting remote interpreter server on port {}, intpEventServerAddress: {}:{}", port,
             intpEventServerHost, intpEventServerPort);
+
     if (null != intpEventServerHost) {
       this.intpEventServerHost = intpEventServerHost;
       if (!isTest) {
@@ -182,6 +183,7 @@ public class RemoteInterpreterServer extends Thread
     RemoteInterpreterService.Processor<RemoteInterpreterServer> processor =
         new RemoteInterpreterService.Processor<>(this);
     TServerSocket serverTransport;
+
     if (null == intpEventServerHost) {
       // Dev Interpreter
       serverTransport = new TServerSocket(intpEventServerPort);

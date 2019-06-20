@@ -18,7 +18,6 @@
 package org.apache.zeppelin.interpreter.remote;
 
 import org.apache.thrift.TException;
-import org.apache.zeppelin.interpreter.Constants;
 import org.apache.zeppelin.interpreter.Interpreter;
 import org.apache.zeppelin.interpreter.InterpreterContext;
 import org.apache.zeppelin.interpreter.InterpreterException;
@@ -59,38 +58,6 @@ public class RemoteInterpreterServerTest {
 
     server.intpEventClient.onAppStatusUpdate("", "", "", "");
     stopRemoteInterpreterServer(server, 10 * 10000);
-  }
-
-  public static void startRemoteInterpreterServer(RemoteInterpreterServer server, int timeout)
-      throws InterruptedException {
-    assertEquals(false, server.isRunning());
-    server.start();
-    long startTime = System.currentTimeMillis();
-    while (System.currentTimeMillis() - startTime < timeout) {
-      if (server.isRunning()) {
-        break;
-      }
-      Thread.sleep(200);
-    }
-    assertEquals(true, server.isRunning());
-    assertEquals(true, RemoteInterpreterUtils.checkIfRemoteEndpointAccessible("localhost",
-        server.getPort()));
-  }
-
-  public static void stopRemoteInterpreterServer(RemoteInterpreterServer server, int timeout)
-      throws TException, InterruptedException {
-    assertEquals(true, server.isRunning());
-    server.shutdown();
-    long startTime = System.currentTimeMillis();
-    while (System.currentTimeMillis() - startTime < timeout) {
-      if (!server.isRunning()) {
-        break;
-      }
-      Thread.sleep(200);
-    }
-    assertEquals(false, server.isRunning());
-    assertEquals(false, RemoteInterpreterUtils.checkIfRemoteEndpointAccessible("localhost",
-        server.getPort()));
   }
 
   @Test
@@ -184,6 +151,39 @@ public class RemoteInterpreterServerTest {
     // close
     server.close("session_1", Test1Interpreter.class.getName());
     assertTrue(interpreter1.closed.get());
+  }
+
+  public static void startRemoteInterpreterServer(RemoteInterpreterServer server, int timeout)
+          throws InterruptedException {
+    assertEquals(false, server.isRunning());
+    server.start();
+    long startTime = System.currentTimeMillis();
+    while (System.currentTimeMillis() - startTime < timeout) {
+      if (server.isRunning()) {
+        break;
+      }
+      Thread.sleep(200);
+    }
+    assertEquals(true, server.isRunning());
+    assertEquals(true, RemoteInterpreterUtils.checkIfRemoteEndpointAccessible("localhost",
+            server.getPort()));
+  }
+
+  public static void stopRemoteInterpreterServer(RemoteInterpreterServer server, int timeout)
+          throws TException, InterruptedException {
+    assertEquals(true, server.isRunning());
+    server.shutdown();
+    long startTime = System.currentTimeMillis();
+    while (System.currentTimeMillis() - startTime < timeout) {
+      if (!server.isRunning()) {
+        break;
+      }
+      Thread.sleep(200);
+    }
+    assertEquals(false, server.isRunning());
+    assertEquals(false, RemoteInterpreterUtils.checkIfRemoteEndpointAccessible("localhost",
+            server.getPort()));
+
   }
 
   public static class Test1Interpreter extends Interpreter {
