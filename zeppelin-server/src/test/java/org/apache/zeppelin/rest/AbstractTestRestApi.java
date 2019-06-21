@@ -298,7 +298,11 @@ public abstract class AbstractTestRestApi {
         FileUtils.deleteQuietly(shiroIni);
       }
       LOG.info("Terminating test Zeppelin...");
-      ZeppelinServer.jettyWebServer.stop();
+      try {
+        ZeppelinServer.jettyWebServer.stop();
+      } catch (IOException e) {
+        LOG.error("Jetty webserver shutdown fail", e);
+      }
       executor.shutdown();
       PluginManager.reset();
 
