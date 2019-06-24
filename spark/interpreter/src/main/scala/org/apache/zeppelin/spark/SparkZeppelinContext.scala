@@ -24,6 +24,7 @@ import org.apache.zeppelin.annotation.ZeppelinApi
 import org.apache.zeppelin.display.AngularObjectWatcher
 import org.apache.zeppelin.display.ui.OptionInput.ParamOption
 import org.apache.zeppelin.interpreter.{BaseZeppelinContext, InterpreterContext, InterpreterHookRegistry}
+import org.apache.zeppelin.python.PythonRestApiHandler
 import org.apache.zeppelin.serving.JsonApiHandler
 
 import scala.collection.{JavaConversions, Seq}
@@ -136,6 +137,38 @@ class SparkZeppelinContext(val sc: SparkContext,
       override def handle(t: T): AnyRef = func;
     };
     interpreterContext.addRestApi(name, handler)
+  }
+
+  // expected to be called from PySparkInterpreter.
+  @ZeppelinApi def addRestApiHandler(endpoint: String): Unit = {
+    val handler = new PythonRestApiHandler(endpoint, restApiReqResQueue)
+    interpreterContext.addRestApi(endpoint, handler)
+  }
+
+  import java.util.concurrent.ConcurrentLinkedQueue
+  import org.apache.zeppelin.python.PythonRestApiRequestResponseMessage
+
+  val restApiReqResQueue = new ConcurrentLinkedQueue[PythonRestApiRequestResponseMessage]
+
+  /**
+    * method will be invoked by python
+    *
+    * @return
+    */
+  def getNextApiRequestFromQueue: PythonRestApiRequestResponseMessage = {
+    var message = restApiReqResQueue.poll
+    if (message == null) {
+      restApiReqResQueue.synchronized {
+        try
+          restApiReqResQueue.wait(1000)
+        catch {
+          case e: InterruptedException =>
+          // nothing to do
+        }
+        message = restApiReqResQueue.poll
+      }
+    }
+    message
   }
 
   private def angularWatch(name: String, noteId: String, func: (AnyRef, AnyRef) => Unit): Unit = {
