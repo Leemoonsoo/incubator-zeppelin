@@ -35,7 +35,7 @@ jobs:
         mvn clean -B -Prat org.apache.rat:apache-rat-plugin:check
 
   # Default build command, no tests
-  build-only:
+  all-modules-build-only:
     runs-on: ubuntu-18.04
     steps:
     - uses: actions/checkout@v1
@@ -61,14 +61,15 @@ jobs:
     - name: Build with Maven
       run: |
         source ./testing/interpreters.sh
-        mvn install -B -DskipTests -pl ${INTERPRETERS}
+        mvn install -B -DskipTests -pl "${INTERPRETERS}"
     - name: Run test
       run: |
         source ./testing/interpreters.sh
-        mvn verify -B -Pweb-e2e -pl zeppelin-web -pl ${INTERPRETERS}
+        echo "mvn verify -B -Pweb-e2e -pl "${INTERPRETERS}" -pl zeppelin-web"
+        mvn verify -B -Pweb-e2e -pl "${INTERPRETERS}" -pl zeppelin-web
 
   # Build distribution package and test core modules using distribution package
-  test-core-distr:
+  test-core-modules-distr:
     runs-on: ubuntu-18.04
     steps:
     - uses: actions/checkout@v1
