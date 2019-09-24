@@ -60,13 +60,10 @@ jobs:
     #  run: sudo apt-get install google-chrome-stable
     - name: Build with Maven
       run: |
-        source ./testing/interpreters.sh
-        mvn install -B -T 4 -DskipTests -pl "${INTERPRETERS}"
+        mvn install -B -T 4 -DskipTests
     - name: Run test
       run: |
-        source ./testing/interpreters.sh
-        echo "mvn verify -B -Pweb-e2e -pl "${INTERPRETERS}" -pl zeppelin-web"
-        mvn verify -B -Pweb-e2e -pl "${INTERPRETERS}" -pl zeppelin-web
+        mvn verify -B -Pweb-e2e -pl zeppelin-web
 
   # Build distribution package and test core modules using distribution package
   test-core-modules-distr:
@@ -79,12 +76,10 @@ jobs:
         java-version: 1.8
     - name: Build with Maven
       run: |
-        source ./testing/interpreters.sh
-        mvn install -B -T 4 -Pbuild-distr -DskipTests -pl ${INTERPRETERS}
+        mvn install -B -T 4 -Pbuild-distr -DskipTests
     - name: Run test
       env:
         PYTHON: 3
         SPARKR: true
       run: |
-        source ./testing/interpreters.sh
         mvn verify -B -Pusing-packaged-distr -Pspark-2.2 -Pspark-scala-2.11 -Phelium-dev -Pexamples -pl zeppelin-web -pl ${INTERPRETERS} -Dtests.to.exclude=**/JdbcIntegrationTest.java,**/SparkIntegrationTest.java,**/ZeppelinSparkClusterTest.java,**/org/apache/zeppelin/spark/*,**/HeliumApplicationFactoryTest.java -DfailIfNoTests=false
