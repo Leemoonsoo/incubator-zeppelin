@@ -32,7 +32,7 @@ jobs:
         java-version: 1.8
     - name: Build with Maven
       run: |
-        mvn clean -Prat -B org.apache.rat:apache-rat-plugin:check
+        mvn clean -B -Prat org.apache.rat:apache-rat-plugin:check
 
   # Default build command, no tests
   build-only:
@@ -45,4 +45,27 @@ jobs:
         java-version: 1.8
     - name: Build with Maven
       run: |
-        mvn clean package -DskipTests
+        mvn clean package -B -DskipTests
+
+  # Run e2e tests (in zeppelin-web)
+  zeppelin-web-e2e-test:
+    runs-on: ubuntu-18.04
+    steps:
+    - uses: actions/checkout@v1
+    - name: Set up JDK 1.8
+      uses: actions/setup-java@v1
+      with:
+        java-version: 1.8
+    - name: Install chrome
+      run: apt-get install google-chrome-stable
+    - name: Build with Maven
+      env:
+        CI: true
+        WEB_E2E: true
+        PYTHON: 2
+        SCALA_VER: 2.11
+        SPARK_VER: 2.1.0
+        HADOOP_VER: 2.6
+      run: |
+        mvn package -B -Phadoop2 -Pscala-2.11
+
