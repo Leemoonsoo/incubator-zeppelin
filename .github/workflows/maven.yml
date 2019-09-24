@@ -60,7 +60,7 @@ jobs:
     #  run: sudo apt-get install google-chrome-stable
     - name: Build with Maven
       run: |
-        mvn install -B -T 2C -DskipTests
+        mvn clean install -B -T 2C --also-make -DskipTests
     - name: Run test
       run: |
         mvn verify -B -Pweb-e2e -pl zeppelin-web
@@ -76,7 +76,7 @@ jobs:
         java-version: 1.8
     - name: Build with Maven
       run: |
-        mvn install -B -T 2C -Pbuild-distr -DskipTests
+        mvn clean install -B -T 2C -Pbuild-distr -DskipTests
     - name: Run test
       env:
         PYTHON: 3
