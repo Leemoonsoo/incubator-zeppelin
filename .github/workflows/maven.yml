@@ -45,7 +45,7 @@ jobs:
         java-version: 1.8
     - name: Build with Maven
       run: |
-        mvn clean package -B -T 8 -DskipTests
+        mvn clean package -B -T 2C -DskipTests
 
   # Run e2e tests (in zeppelin-web)
   zeppelin-web-e2e-test:
@@ -60,7 +60,7 @@ jobs:
     #  run: sudo apt-get install google-chrome-stable
     - name: Build with Maven
       run: |
-        mvn install -B -T 4 -DskipTests
+        mvn install -B -T 2C -DskipTests
     - name: Run test
       run: |
         mvn verify -B -Pweb-e2e -pl zeppelin-web
@@ -76,7 +76,7 @@ jobs:
         java-version: 1.8
     - name: Build with Maven
       run: |
-        mvn install -B -T 4 -Pbuild-distr -DskipTests
+        mvn install -B -T 2C -Pbuild-distr -DskipTests
     - name: Run test
       env:
         PYTHON: 3
