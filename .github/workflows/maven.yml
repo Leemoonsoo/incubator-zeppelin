@@ -45,7 +45,7 @@ jobs:
         java-version: 1.8
     - name: Build with Maven
       run: |
-        mvn clean package -B -DskipTests
+        mvn clean package -B -T 4 -DskipTests
 
   # Run e2e tests (in zeppelin-web)
   zeppelin-web-e2e-test:
@@ -61,7 +61,7 @@ jobs:
     - name: Build with Maven
       run: |
         source ./testing/interpreters.sh
-        mvn install -B -DskipTests -pl "${INTERPRETERS}"
+        mvn install -B -T 4 -DskipTests -pl "${INTERPRETERS}"
     - name: Run test
       run: |
         source ./testing/interpreters.sh
@@ -80,7 +80,7 @@ jobs:
     - name: Build with Maven
       run: |
         source ./testing/interpreters.sh
-        mvn install -B -Pbuild-distr -DskipTests -pl ${INTERPRETERS}
+        mvn install -B -T 4 -Pbuild-distr -DskipTests -pl ${INTERPRETERS}
     - name: Run test
       env:
         PYTHON: 3
