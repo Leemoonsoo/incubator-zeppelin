@@ -84,10 +84,10 @@ jobs:
         java-version: 1.8
     - name: Build with Maven
       run: |
-        mvn package -B -T 2C -Pbuild-distr -DskipTests -pl $(./testing/interpreters_exclude.sh)
+        mvn package -B -T 2C -Pbuild-distr -DskipTests -Phelium-dev -Pexamples -pl $(./testing/interpreters_exclude.sh)
     - name: Run test
       env:
         PYTHON: 3
         SPARKR: true
       run: |
-        mvn verify -B -Pusing-packaged-distr -Pspark-2.2 -Pspark-scala-2.11 -Phelium-dev -Pexamples -pl zeppelin-web -pl $(./testing/interpreters_exclude.sh) -Dtests.to.exclude=**/JdbcIntegrationTest.java,**/SparkIntegrationTest.java,**/ZeppelinSparkClusterTest.java,**/org/apache/zeppelin/spark/*,**/HeliumApplicationFactoryTest.java -DfailIfNoTests=false
+        mvn verify -B -Pusing-packaged-distr -Pspark-2.2 -Pspark-scala-2.11 -Phelium-dev -Pexamples -pl $(./testing/interpreters_exclude.sh) -Dtests.to.exclude=**/JdbcIntegrationTest.java,**/SparkIntegrationTest.java,**/ZeppelinSparkClusterTest.java,**/org/apache/zeppelin/spark/*,**/HeliumApplicationFactoryTest.java -DfailIfNoTests=false
