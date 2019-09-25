@@ -56,16 +56,15 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 1.8
-    - name: Build with Maven
-      run: |
-        mvn package -B -T 2C -DskipTests -pl $(./testing/interpreters_exclude.sh)
     - name: Start X
       env:
         DISPLAY: :99.0
       run: |
-        sudo apt-get install -y xvfb
-        sudo Xvfb
+        sudo nohup Xvfb &
         sleep 3
+    - name: Build with Maven
+      run: |
+        mvn package -B -T 2C -DskipTests -pl $(./testing/interpreters_exclude.sh)
     - name: Run test
       env:
         CI: true
