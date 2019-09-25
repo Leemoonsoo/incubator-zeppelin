@@ -119,7 +119,7 @@ jobs:
     - name: Build with Maven
       run: |
         # build flink module and dependencies
-        mvn install -B -Pscala-2.11 -DskipTests -pl flink -am
+        mvn install -B -Pscala-2.11 -DskipTests -pl flink -am -Drat.skip=true
     - name: Run test
       run: |
         # run test on flink module
