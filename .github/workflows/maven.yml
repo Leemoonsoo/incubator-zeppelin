@@ -47,8 +47,8 @@ jobs:
       run: |
         mvn clean package -B -T 2C -DskipTests
 
-  # Run e2e tests (in zeppelin-web)
-  zeppelin-web-e2e-test:
+  # Run e2e and selenium tests
+  web-e2e-test:
     runs-on: ubuntu-18.04
     steps:
     - uses: actions/checkout@v1
@@ -58,10 +58,21 @@ jobs:
         java-version: 1.8
     - name: Build with Maven
       run: |
+        ./testing/configure_maven_env.sh
         mvn package -B -T 2C -DskipTests -pl ${EXCLUDE_INTERPRETERS}
-    - name: Run test
+    - name: Start X
+      env:
+        DISPLAY: :99.0
       run: |
-        mvn verify -B -Pweb-e2e -pl zeppelin-web -amd
+        sh -e /etc/init.d/xvfb start
+        sleep 3
+    - name: Run test
+      env:
+        CI: true
+        DISPLAY: :99.0
+      run: |
+        mvn verify -B -Pweb-e2e -Pintegration -pl zeppelin-web,zeppelin-integration -amd -DfailIfNoTests=false
+
 
   # Build distribution package and test core modules using distribution package
   test-core-modules-distr:
@@ -75,7 +86,7 @@ jobs:
     - name: Build with Maven
       run: |
         ./testing/configure_maven_env.sh
-        mvn package -B -T 2C -Pbuild-distr -DskipTests
+        mvn package -B -T 2C -Pbuild-distr -DskipTests -pl ${EXCLUDE_INTERPRETERS}
     - name: Run test
       env:
         PYTHON: 3
