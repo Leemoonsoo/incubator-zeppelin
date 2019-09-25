@@ -111,6 +111,11 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 1.8
+    - name: Install python dependencies
+      env:
+        PYTHON: 3
+      run: |
+        ./testing/install_external_dependencies.sh
     - name: Build with Maven
       run: |
         # build flink module and dependencies
