@@ -59,6 +59,7 @@ jobs:
     - name: Build with Maven
       run: |
         ./testing/configure_maven_env.sh
+        echo mvn package -B -T 2C -DskipTests -pl ${EXCLUDE_INTERPRETERS}
         mvn package -B -T 2C -DskipTests -pl ${EXCLUDE_INTERPRETERS}
     - name: Start X
       env:
