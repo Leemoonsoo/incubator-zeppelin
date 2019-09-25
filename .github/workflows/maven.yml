@@ -19,7 +19,7 @@
 
 # How to minimize build/test time
 #
-#  * Use parallel build (-T) with 'package'. (it does not work with 'install')
+#  * Use parallel build (-T) when using 'package'. (it does not work with 'install')
 #  * Exclude unnecessary submodules with '-pl !<module>,!<module>,...'.
 #  * Include only necessary submodules with -pl <module>,<module>,...'.
 
@@ -52,8 +52,7 @@ jobs:
       with:
         java-version: 1.8
     - name: Build with Maven
-      run: |
-        # build every module without running test
+      run: | # build every module without running test
         mvn package -B -T 2C -DskipTests
 
   # Run e2e and selenium tests
@@ -68,19 +67,17 @@ jobs:
     - name: Start X
       env:
         DISPLAY: :99.0
-      run: |
-        # start x frame buffer for e2e test using chrome / firefox
+      run: | # start x frame buffer for e2e test using chrome / firefox
         sudo nohup Xvfb &
     - name: Build with Maven
       run: |
-        # build p
-        mvn package -B -T 2C -DskipTests -pl $(./testing/interpreters_exclude.sh)
+        mvn install -B -DskipTests -pl $(./testing/interpreters_exclude.sh)
     - name: Run test
       env:
         CI: true
         DISPLAY: :99.0
       run: |
-        mvn verify -B -Pweb-e2e -Pintegration -pl zeppelin-web,zeppelin-integration -am -DfailIfNoTests=false
+        mvn verify -B -Pweb-e2e -Pintegration -pl zeppelin-web,zeppelin-integration -DfailIfNoTests=false
 
 
   # Build distribution package and test core modules using distribution package
@@ -117,10 +114,8 @@ jobs:
       run: |
         ./testing/install_external_dependencies.sh
     - name: Build with Maven
-      run: |
-        # build flink module and dependencies
+      run: | # build flink module and dependencies
         mvn install -B -Pscala-2.11 -DskipTests -pl flink -am -Drat.skip=true
     - name: Run test
-      run: |
-        # run test on flink module
+      run: | # run test on flink module
         mvn test -B -Pspark-scala-2.11 -pl flink
