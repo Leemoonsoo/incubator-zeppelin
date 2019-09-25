@@ -58,7 +58,7 @@ jobs:
         java-version: 1.8
     - name: Build with Maven
       run: |
-        mvn package -B -T 2C -DskipTests
+        mvn package -B -T 2C -DskipTests -pl ${EXCLUDE_INTERPRETERS}
     - name: Run test
       run: |
         mvn verify -B -Pweb-e2e -pl zeppelin-web -amd
