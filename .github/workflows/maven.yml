@@ -44,8 +44,6 @@ jobs:
       with:
         java-version: 1.8
     - name: Build with Maven
-      env:
-        MAVEN_OPTS: -XX:+TieredCompilation -XX:TieredStopAtLevel=1
       run: |
         mvn clean package -B -T 2C -DskipTests
 
@@ -58,14 +56,12 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 1.8
-    #- name: Install chrome # already installed!?
-    #  run: sudo apt-get install google-chrome-stable
     - name: Build with Maven
       run: |
-        mvn clean install -B -T 2C -DskipTests -pl zeppelin -am
+        mvn package -B -T 2C -DskipTests
     - name: Run test
       run: |
-        mvn verify -B -Pweb-e2e -pl zeppelin-web
+        mvn verify -B -Pweb-e2e -pl zeppelin-web -amd
 
   # Build distribution package and test core modules using distribution package
   test-core-modules-distr:
@@ -78,10 +74,12 @@ jobs:
         java-version: 1.8
     - name: Build with Maven
       run: |
-        mvn clean install -B -T 2C -Pbuild-distr -DskipTests
+        ./testing/configure_maven_env.sh
+        mvn package -B -T 2C -Pbuild-distr -DskipTests
     - name: Run test
       env:
         PYTHON: 3
         SPARKR: true
       run: |
+        ./testing/configure_maven_env.sh
         mvn verify -B -Pusing-packaged-distr -Pspark-2.2 -Pspark-scala-2.11 -Phelium-dev -Pexamples -pl zeppelin-web -pl ${INTERPRETERS} -Dtests.to.exclude=**/JdbcIntegrationTest.java,**/SparkIntegrationTest.java,**/ZeppelinSparkClusterTest.java,**/org/apache/zeppelin/spark/*,**/HeliumApplicationFactoryTest.java -DfailIfNoTests=false
