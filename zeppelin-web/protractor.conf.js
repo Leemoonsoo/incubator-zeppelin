@@ -2,7 +2,7 @@ var baseConfig = {
   baseUrl: 'http://localhost:8080/',
   directConnect: true,
   capabilities: {
-    browserName: 'chrome',
+    browserName: 'firefox',
   },
   allScriptsTimeout: 300000, // 5 min
 
