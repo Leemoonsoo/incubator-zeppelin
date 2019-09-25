@@ -64,7 +64,7 @@ matrix:
     - sudo: required
       jdk: "openjdk8"
       dist: xenial
-      env: BUILD_FLAG="clean package -DskipTests -T 2C" TEST_FLAG=""
+      env: BUILD_FLAG="clean package -DskipTests -T 1C" TEST_FLAG=""
 
     # Run e2e tests (in zeppelin-web)
     # chrome dropped the support for precise (ubuntu 12.04), so need to use trusty
