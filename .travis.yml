@@ -64,7 +64,7 @@ matrix:
     - sudo: required
       jdk: "openjdk8"
       dist: xenial
-      env: BUILD_FLAG="clean package -DskipTests" TEST_FLAG="test -DskipTests"
+      env: BUILD_FLAG="clean package -DskipTests -T 2C" TEST_FLAG=""
 
     # Run e2e tests (in zeppelin-web)
     # chrome dropped the support for precise (ubuntu 12.04), so need to use trusty
@@ -203,8 +203,8 @@ before_script:
 
 script:
   - if [[ -n $TEST_MODULES ]]; then export MODULES="${TEST_MODULES}"; fi
-  - echo "mvn $TEST_FLAG $MODULES $PROFILE -B $TEST_PROJECTS"
-  - mvn $TEST_FLAG $MODULES $PROFILE -B $TEST_PROJECTS
+  - if [[ -n $TEST_FLAG ]]; then echo "mvn $TEST_FLAG $MODULES $PROFILE -B $TEST_PROJECTS"; fi
+  - if [[ -n $TEST_FLAG ]]; then mvn $TEST_FLAG $MODULES $PROFILE -B $TEST_PROJECTS; fi
 
 after_success:
   - echo "Travis exited with ${TRAVIS_TEST_RESULT}"
