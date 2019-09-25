@@ -16,6 +16,14 @@
 # specific language governing permissions and limitations
 # under the License.
 #
+
+# How to minimize build/test time
+#
+#  * Use parallel build (-T) with 'package'. (it does not work with 'install')
+#  * Exclude unnecessary submodules with '-pl !<module>,!<module>,...'.
+#  * Include only necessary submodules with -pl <module>,<module>,...'.
+
+
 name: Zeppelin CI
 
 on: [push, pull_request]
@@ -45,7 +53,8 @@ jobs:
         java-version: 1.8
     - name: Build with Maven
       run: |
-        mvn clean package -B -T 2C -DskipTests
+        # build every module without running test
+        mvn package -B -T 2C -DskipTests
 
   # Run e2e and selenium tests
   web-e2e-test:
@@ -60,9 +69,11 @@ jobs:
       env:
         DISPLAY: :99.0
       run: |
+        # start x frame buffer for e2e test using chrome / firefox
         sudo nohup Xvfb &
     - name: Build with Maven
       run: |
+        # build p
         mvn package -B -T 2C -DskipTests -pl $(./testing/interpreters_exclude.sh)
     - name: Run test
       env:
@@ -101,12 +112,10 @@ jobs:
       with:
         java-version: 1.8
     - name: Build with Maven
-      env:
-        PYTHON: 3
       run: |
-        mvn package -B -T 2C -Pscala-2.11 -DskipTests -pl 'flink,zeppelin-server' -am
+        # build flink module and dependencies
+        mvn install -B -Pscala-2.11 -DskipTests -pl flink -am
     - name: Run test
-      env:
-        PYTHON: 3
       run: |
-        mvn verify -B -Pspark-scala-2.11 -pl flink -DfailIfNoTests=false
+        # run test on flink module
+        mvn test -B -Pspark-scala-2.11 -pl flink
