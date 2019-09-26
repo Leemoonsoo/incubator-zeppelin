@@ -598,18 +598,15 @@ public class CassandraInterpreterTest {
   public void should_describe_keyspace() throws Exception {
     //Given
     String query = "DESCRIBE KEYSPACE live_data;";
-    String expected = reformatHtml(
+    final String expected = reformatHtml(
             readTestResource("/scalate/DescribeKeyspace_live_data.html"));
-    expected = expected.replaceAll("max_index_interval = 2048", "max_index_interval = ");
 
     //When
     final InterpreterResult actual = interpreter.interpret(query, intrContext);
 
     //Then
     assertThat(actual.code()).isEqualTo(Code.SUCCESS);
-    assertThat(reformatHtml(actual.message().get(0).getData())
-            .replaceAll("max_index_interval = 2048", "max_index_interval = "))
-            .isEqualTo(expected);
+    assertThat(reformatHtml(actual.message().get(0).getData())).isEqualTo(expected);
   }
 
   @Test
