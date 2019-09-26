@@ -217,7 +217,10 @@ public abstract class ClusterManager {
       @Override
       public void run() {
         LOGGER.info("RaftClientThread run() >>>");
-
+        try {
+          Thread.sleep(1000);
+        } catch (InterruptedException e) {
+        }
         int raftClientPort = 0;
         try {
           raftClientPort = RemoteInterpreterUtils.findRandomAvailablePortOnAllLocalInterfaces();
