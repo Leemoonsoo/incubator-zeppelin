@@ -55,6 +55,48 @@ jobs:
       run: | # build every module without running test
         mvn package -B -T 2C -DskipTests
 
+  # Test core modules (exclude interpreter listed in ./testing/interpreters_exclude.sh), with distribution package
+  test-core-modules-distr:
+    runs-on: ubuntu-18.04
+    steps:
+    - uses: actions/checkout@v1
+    - name: Set up JDK 1.8
+      uses: actions/setup-java@v1
+      with:
+        java-version: 1.8
+    - name: Build with Maven
+      run: |
+        mvn package -B -T 2C -Pbuild-distr -DskipTests -Phelium-dev -Pexamples -pl $(./testing/interpreters_exclude.sh)
+    - name: Run test
+      env:
+        PYTHON: 3
+        SPARKR: true
+      run: |
+        mvn verify -B -Pusing-packaged-distr -Pspark-2.2 -Pspark-scala-2.11 -Phelium-dev -Pexamples -pl $(./testing/interpreters_exclude.sh) -Dtests.to.exclude=**/JdbcIntegrationTest.java,**/SparkIntegrationTest.java,**/ZeppelinSparkClusterTest.java,**/org/apache/zeppelin/spark/*,**/HeliumApplicationFactoryTest.java -DfailIfNoTests=false
+
+  # Test interpreter modules listed in ./testing/interpreters_exclude.sh.
+  test-interpreter-modules:
+    runs-on: ubuntu-18.04
+    steps:
+    - uses: actions/checkout@v1
+    - name: Set up JDK 1.8
+      uses: actions/setup-java@v1
+      with:
+        java-version: 1.8
+    - name: Install python dependencies
+      env:
+        PYTHON: 3
+        TENSORFLOW: 1.0.0
+      run: |
+        ./testing/install_external_dependencies.sh
+    - name: Build with Maven
+      run: | # build all interpreter modules
+        mvn package -B -Pscala-2.11 -DskipTests -pl $(./testing/interpreters_exclude.sh | sed 's/!//g') -am -Drat.skip=true
+    - name: Run test
+      run: | # run test of all interpreter modules
+        source ~/.environ  # apply python environment that is configured in 'Install python dependencies' step
+        mvn test -B -Pscala-2.11 -DfailIfNoTests=false -pl $(./testing/interpreters_exclude.sh | sed 's/!//g')
+
   # Run e2e and selenium tests
   web-e2e-test:
     runs-on: ubuntu-18.04
@@ -79,26 +121,6 @@ jobs:
       run: |
         mvn verify -B -Pweb-e2e -Pintegration -pl zeppelin-web,zeppelin-integration -DfailIfNoTests=false
 
-
-  # Build distribution package and test core modules using distribution package
-  test-core-modules-distr:
-    runs-on: ubuntu-18.04
-    steps:
-    - uses: actions/checkout@v1
-    - name: Set up JDK 1.8
-      uses: actions/setup-java@v1
-      with:
-        java-version: 1.8
-    - name: Build with Maven
-      run: |
-        mvn package -B -T 2C -Pbuild-distr -DskipTests -Phelium-dev -Pexamples -pl $(./testing/interpreters_exclude.sh)
-    - name: Run test
-      env:
-        PYTHON: 3
-        SPARKR: true
-      run: |
-        mvn verify -B -Pusing-packaged-distr -Pspark-2.2 -Pspark-scala-2.11 -Phelium-dev -Pexamples -pl $(./testing/interpreters_exclude.sh) -Dtests.to.exclude=**/JdbcIntegrationTest.java,**/SparkIntegrationTest.java,**/ZeppelinSparkClusterTest.java,**/org/apache/zeppelin/spark/*,**/HeliumApplicationFactoryTest.java -DfailIfNoTests=false
-
   # Test flink module
   test-flink-module:
     runs-on: ubuntu-18.04
@@ -120,3 +142,4 @@ jobs:
       run: | # run test on flink module
         source ~/.environ  # apply python environment that is configured in 'Install python dependencies' step
         mvn test -B -Pspark-scala-2.11 -pl flink
+
