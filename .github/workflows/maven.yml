@@ -118,4 +118,5 @@ jobs:
         mvn install -B -Pscala-2.11 -DskipTests -pl flink -am -Drat.skip=true
     - name: Run test
       run: | # run test on flink module
+        source ~/.environ  # apply python environment that is configured in 'Install python dependencies' step
         mvn test -B -Pspark-scala-2.11 -pl flink
