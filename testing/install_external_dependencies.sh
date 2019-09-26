@@ -22,7 +22,7 @@ touch ~/.environ
 
 # Install R dependencies if SPARKR is true
 if [[ "${SPARKR}" = "true" ]] ; then
-  sudo echo "deb http://cran.rstudio.com/bin/linux/ubuntu xenial/" | tee -a /etc/apt/sources.list
+  sudo echo "deb http://cran.rstudio.com/bin/linux/ubuntu xenial/" | sudo tee -a /etc/apt/sources.list
   sudo gpg --keyserver keyserver.ubuntu.com --recv-key E084DAB9
   sudo gpg -a --export E084DAB9 | sudo apt-key add -
   sudo apt-get -y update
