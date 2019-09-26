@@ -217,10 +217,6 @@ public abstract class ClusterManager {
       @Override
       public void run() {
         LOGGER.info("RaftClientThread run() >>>");
-        try {
-          Thread.sleep(1000);
-        } catch (InterruptedException e) {
-        }
         int raftClientPort = 0;
         try {
           raftClientPort = RemoteInterpreterUtils.findRandomAvailablePortOnAllLocalInterfaces();
@@ -229,6 +225,7 @@ public abstract class ClusterManager {
         }
 
         MemberId memberId = MemberId.from(zeplServerHost + ":" + raftClientPort);
+        LOGGER.info("Add Raft client " + memberId+ " = " + zeplServerHost + ":" + raftClientPort);
         Address address = Address.from(zeplServerHost, raftClientPort);
         raftAddressMap.put(memberId, address);
 

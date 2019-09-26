@@ -43,7 +43,7 @@ jobs:
         mvn clean -B -Prat org.apache.rat:apache-rat-plugin:check
 
   # Default build command, no tests
-  all-modules-build-only:
+  build-only-all:
     runs-on: ubuntu-18.04
     steps:
     - uses: actions/checkout@v1
@@ -56,7 +56,7 @@ jobs:
         mvn package -B -T 2C -DskipTests
 
   # Test core modules (exclude interpreter listed in ./testing/interpreters_exclude.sh), with distribution package
-  test-core-modules-distr:
+  test-core-only-distr:
     runs-on: ubuntu-18.04
     steps:
     - uses: actions/checkout@v1
@@ -75,7 +75,7 @@ jobs:
         mvn verify -B -Pusing-packaged-distr -Pspark-2.2 -Pspark-scala-2.11 -Phelium-dev -Pexamples -pl $(./testing/interpreters_exclude.sh) -Dtests.to.exclude=**/JdbcIntegrationTest.java,**/SparkIntegrationTest.java,**/ZeppelinSparkClusterTest.java,**/org/apache/zeppelin/spark/*,**/HeliumApplicationFactoryTest.java -DfailIfNoTests=false
 
   # Test interpreter modules listed in ./testing/interpreters_exclude.sh.
-  test-interpreter-modules:
+  test-interpreters-only:
     runs-on: ubuntu-18.04
     steps:
     - uses: actions/checkout@v1
@@ -91,14 +91,14 @@ jobs:
         ./testing/install_external_dependencies.sh
     - name: Build with Maven
       run: | # build all interpreter modules
-        mvn package -B -Pscala-2.11 -DskipTests -pl $(./testing/interpreters_exclude.sh | sed 's/!//g') -am -Drat.skip=true
+        mvn install -B -Pscala-2.11 -DskipTests -pl $(./testing/interpreters_exclude.sh | sed 's/!//g') -am -Drat.skip=true
     - name: Run test
       run: | # run test of all interpreter modules
         source ~/.environ  # apply python environment that is configured in 'Install python dependencies' step
         mvn test -B -Pscala-2.11 -DfailIfNoTests=false -pl $(./testing/interpreters_exclude.sh | sed 's/!//g')
 
   # Run e2e and selenium tests
-  web-e2e-test:
+  test-end-to-end:
     runs-on: ubuntu-18.04
     steps:
     - uses: actions/checkout@v1
