@@ -22,6 +22,12 @@ touch ~/.environ
 
 # Install R dependencies if SPARKR is true
 if [[ "${SPARKR}" = "true" ]] ; then
+  echo "deb http://cran.rstudio.com/bin/linux/ubuntu xenial/" | tee -a /etc/apt/sources.list
+  gpg --keyserver keyserver.ubuntu.com --recv-key E084DAB9
+  sudo gpg -a --export E084DAB9 | sudo apt-key add -
+  sudo apt-get -y update
+  sudo apt-get -y --allow-unauthenticated install r-base r-base-dev
+
   echo "R_LIBS=~/R" > ~/.Renviron
   echo "export R_LIBS=~/R" >> ~/.environ
   source ~/.environ
