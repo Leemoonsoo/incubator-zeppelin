@@ -121,8 +121,8 @@ jobs:
       run: |
         mvn verify -B -Pweb-e2e -Pintegration -pl zeppelin-web,zeppelin-integration -DfailIfNoTests=false
 
-  # Test flink module
-  test-flink-module:
+  # Test Spark
+  integration-test-spark-jdbc:
     runs-on: ubuntu-18.04
     steps:
     - uses: actions/checkout@v1
@@ -142,4 +142,36 @@ jobs:
       run: | # run test on flink module
         source ~/.environ  # apply python environment that is configured in 'Install python dependencies' step
         mvn test -B -Pspark-scala-2.11 -pl flink
+
+
+
+  # Test flink module
+  test-flink-module:
+    runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        scala: ["2.11", "2.12"]
+        spark: ["2.4"]
+        python: ["2"]
+    steps:
+    - uses: actions/checkout@v1
+    - name: Set up JDK 1.8
+      uses: actions/setup-java@v1
+      with:
+        java-version: 1.8
+    - name: Install python dependencies
+      env:
+        PYTHON: ${{ matrix.python }}
+        SCALA_VER: ${{ matrix.scala }}
+        BUILD_PLUGINS: true
+        SPARKR: true
+      run: |
+        ./testing/install_external_dependencies.sh
+    - name: Build with Maven
+      run: | # build flink module and dependencies
+        mvn install -B -Drat.skip=true -DskipTests -Pscala-${{matrix.scala}} -Pspark-${{matrix.spark}} -Pspark-scala-${{matrix.scala}} -Phadoop2 -Pintegration -pl zeppelin-interpreter-integration,jdbc,zeppelin-web,spark/spark-dependencies -am
+    - name: Run test
+      run: | # run test on flink module
+        source ~/.environ  # apply python environment that is configured in 'Install python dependencies' step
+        mvn test -B -Pscala-${{matrix.scala}} -Pspark-${{matrix.spark}} -Pspark-scala-${{matrix.scala}} -Phadoop2 -Pintegration -pl zeppelin-interpreter-integration,jdbc,zeppelin-web,spark/spark-dependencies -am -Dtest=ZeppelinSparkClusterTest24,SparkIntegrationTest24,JdbcIntegrationTest,org.apache.zeppelin.spark.* -DfailIfNoTests=false
 
