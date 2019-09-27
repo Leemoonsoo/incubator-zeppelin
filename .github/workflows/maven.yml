@@ -37,6 +37,7 @@ jobs:
         echo "mysql test"
         sudo service mysql stop
         sudo mysqld_safe --skip-grant-tables &
-        sleep 5
+        sleep 20
+        echo "safe"
         echo "show databases;" | mysql -uroot -h localhost
         echo "yo"
