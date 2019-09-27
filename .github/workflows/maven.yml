@@ -35,5 +35,7 @@ jobs:
     - name:
       run: |
         echo "mysql test"
-        echo "show databases;" | mysql -uroot -h 127.0.0.1
+        service mysql stop
+        mysqld_safe --skip-grant-tables &
+        echo "show databases;" | mysql -uroot
         echo "yo"
