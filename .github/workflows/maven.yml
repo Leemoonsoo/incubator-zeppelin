@@ -35,5 +35,5 @@ jobs:
     - name:
       run: |
         echo "mysql test"
-        echo "show databases;" | mysql -uroot
+        echo "show databases;" | mysql -uroot -h 127.0.0.1
         echo "yo"
