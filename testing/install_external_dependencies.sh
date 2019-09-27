@@ -22,9 +22,17 @@ touch ~/.environ
 
 # Install R dependencies if SPARKR is true
 if [[ "${SPARKR}" = "true" ]] ; then
-  sudo echo "deb http://cran.rstudio.com/bin/linux/ubuntu xenial/" | sudo tee -a /etc/apt/sources.list
-  sudo gpg --keyserver keyserver.ubuntu.com --recv-key E084DAB9
-  sudo gpg -a --export E084DAB9 | sudo apt-key add -
+  if [[ -n "$GITHUB_ACTION" ]]; then
+    # github action
+    sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9
+    sudo add-apt-repository 'deb https://cloud.r-project.org/bin/linux/ubuntu bionic-cran35/'
+  else
+    # travis
+    sudo echo "deb http://cran.rstudio.com/bin/linux/ubuntu xenial/" | sudo tee -a /etc/apt/sources.list
+    sudo gpg --keyserver keyserver.ubuntu.com --recv-key E084DAB9
+    sudo gpg -a --export E084DAB9 | sudo apt-key add -
+  fi
+
   sudo apt-get -y update
   sudo apt-get -y --allow-unauthenticated install r-base r-base-dev
 
