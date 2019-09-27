@@ -121,28 +121,6 @@ jobs:
       run: |
         mvn verify -B -Pweb-e2e -Pintegration -pl zeppelin-web,zeppelin-integration -DfailIfNoTests=false
 
-  # Test flink module
-  test-flink-module:
-    runs-on: ubuntu-18.04
-    steps:
-    - uses: actions/checkout@v1
-    - name: Set up JDK 1.8
-      uses: actions/setup-java@v1
-      with:
-        java-version: 1.8
-    - name: Install python dependencies
-      env:
-        PYTHON: 3
-      run: |
-        ./testing/install_external_dependencies.sh
-    - name: Build with Maven
-      run: | # build flink module and dependencies
-        mvn install -B -Pscala-2.11 -DskipTests -pl flink -am -Drat.skip=true
-    - name: Run test
-      run: | # run test on flink module
-        source ~/.environ  # apply python environment that is configured in 'Install python dependencies' step
-        mvn test -B -Pspark-scala-2.11 -pl flink
-
   # Test Spark
   integration-test-spark-jdbc:
     runs-on: ubuntu-18.04
