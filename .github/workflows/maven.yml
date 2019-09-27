@@ -156,22 +156,3 @@ jobs:
       run: |
         source ~/.environ  # apply environment that is configured in 'Install python dependencies' step
         mvn test -B -Pspark-${{matrix.spark}} -Pspark-scala-${{matrix.scala}} -Phadoop2 -Pintegration -pl zeppelin-interpreter-integration,jdbc,zeppelin-web,spark/spark-dependencies -am -Dtest=ZeppelinSparkClusterTest24,SparkIntegrationTest24,JdbcIntegrationTest,org.apache.zeppelin.spark.* -DfailIfNoTests=false
-
-  mysql-test:
-    runs-on: ubuntu-18.04
-    - name: Install python dependencies
-      env:
-        PYTHON: ${{ matrix.python }}
-        SCALA_VER: ${{ matrix.scala }}
-        BUILD_PLUGINS: true
-        SPARKR: true
-      run: |
-        ./testing/install_external_dependencies.sh
-        sudo service mysql start
-    - name: Build with Maven
-      run: |
-        mvn install -B -Drat.skip=true -DskipTests -Pspark-${{matrix.spark}} -Pspark-scala-${{matrix.scala}} -Phadoop2 -Pintegration -pl zeppelin-interpreter-integration,jdbc,zeppelin-web,spark/spark-dependencies -am
-    - name: Run test
-      run: |
-        source ~/.environ  # apply environment that is configured in 'Install python dependencies' step
-        mvn test -B -Pspark-${{matrix.spark}} -Pspark-scala-${{matrix.scala}} -Phadoop2 -Pintegration -pl zeppelin-interpreter-integration,jdbc,zeppelin-web,spark/spark-dependencies -am -Dtest=ZeppelinSparkClusterTest24,SparkIntegrationTest24,JdbcIntegrationTest,org.apache.zeppelin.spark.* -DfailIfNoTests=false
