@@ -38,5 +38,5 @@ jobs:
         sudo service mysql stop
         sudo mysqld_safe --skip-grant-tables &
         sleep 5
-        echo "show databases;" | mysql -uroot
+        echo "show databases;" | mysql -uroot -h localhost
         echo "yo"
