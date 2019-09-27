@@ -35,7 +35,7 @@ jobs:
     - name:
       run: |
         echo "mysql test"
-        service mysql stop
-        mysqld_safe --skip-grant-tables &
+        sudo service mysql stop
+        sudo mysqld_safe --skip-grant-tables &
         echo "show databases;" | mysql -uroot
         echo "yo"
