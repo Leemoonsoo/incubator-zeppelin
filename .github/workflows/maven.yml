@@ -36,6 +36,8 @@ jobs:
       run: |
         echo "mysql test"
         sudo service mysql stop
+        sudo mkdir -p /var/run/mysqld
+        sudo chown mysql:mysql /var/run/mysqld
         sudo mysqld_safe --skip-grant-tables &
         sleep 20
         echo "safe"
