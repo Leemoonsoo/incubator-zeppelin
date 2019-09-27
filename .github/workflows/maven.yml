@@ -143,7 +143,7 @@ jobs:
         SPARKR: true
       run: |
         ./testing/install_external_dependencies.sh
-        sudo apt-get install -y mysql-server mysql-client # for jdbc integration test
+        sudo service mysql start
     - name: Build with Maven
       run: |
         mvn install -B -Drat.skip=true -DskipTests -Pspark-${{matrix.spark}} -Pspark-scala-${{matrix.scala}} -Phadoop2 -Pintegration -pl zeppelin-interpreter-integration,jdbc,zeppelin-web,spark/spark-dependencies -am
