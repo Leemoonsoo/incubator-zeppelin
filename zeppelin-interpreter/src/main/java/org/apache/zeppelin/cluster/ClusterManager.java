@@ -133,7 +133,7 @@ public abstract class ClusterManager {
 
   public final ZeppelinConfiguration zconf = ZeppelinConfiguration.create();
 
-  protected Collection<Node> clusterNodes = new ArrayList<>();
+  protected Collection<Node> clusterNodes = Collections.synchronizedList(new ArrayList<>());
 
   protected int raftServerPort = 0;
 
@@ -142,7 +142,7 @@ public abstract class ClusterManager {
   protected Map<MemberId, Address> raftAddressMap = new ConcurrentHashMap<>();
   protected LocalRaftProtocolFactory protocolFactory
       = new LocalRaftProtocolFactory(protocolSerializer);
-  protected List<MemberId> clusterMemberIds = new ArrayList<MemberId>();
+  protected List<MemberId> clusterMemberIds = Collections.synchronizedList(new ArrayList<MemberId>());
 
   protected AtomicBoolean running = new AtomicBoolean(true);
 
@@ -241,7 +241,7 @@ public abstract class ClusterManager {
             .withProtocol(protocol)
             .build();
 
-        LOGGER.info("Cluster member Ids " + clusterMemberIds);
+        LOGGER.info("**Cluster member Ids " + clusterMemberIds);
         raftClient.connect(clusterMemberIds).join();
 
         raftSessionClient = createProxy(raftClient);
