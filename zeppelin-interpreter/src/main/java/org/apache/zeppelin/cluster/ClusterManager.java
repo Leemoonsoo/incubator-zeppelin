@@ -161,6 +161,7 @@ public abstract class ClusterManager {
     try {
       zeplServerHost = RemoteInterpreterUtils.findAvailableHostAddress();
       String clusterAddr = zconf.getClusterAddress();
+      LOGGER.info("**Raft cluster address = " + clusterAddr);
       if (!StringUtils.isEmpty(clusterAddr)) {
         String cluster[] = clusterAddr.split(",");
 
