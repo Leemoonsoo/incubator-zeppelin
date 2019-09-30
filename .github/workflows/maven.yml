@@ -184,7 +184,7 @@ jobs:
     runs-on: ubuntu-18.04
     strategy:
       matrix:
-        livy: ["0.5.0-incubating"]
+        livy: ["0.5.0-incubating", "0.5.0-incubating"]
         include:
           - livy: "0.5.0-incubating"
             spark: "1.6"
@@ -198,6 +198,9 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 1.8
+    - name: Download Livy
+      run: |
+        ./testing/downloadLivy.sh ${{ matrix.livy }}
     - name: Install python dependencies
       env:
         PYTHON: ${{ matrix.python }}
@@ -211,6 +214,7 @@ jobs:
     - name: Run test
       env:
         LIVY_VER: ${{ matrix.livy}}
+        LIVY_HOME: `pwd`/livy-${{ matrix.livy }}-bin
       run: |
         source ~/.environ  # apply environment that is configured in 'Install python dependencies' step
         mvn test -B -Pspark-${{matrix.spark}} -Phadoop2 -pl livy
