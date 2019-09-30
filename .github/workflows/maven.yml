@@ -218,4 +218,4 @@ jobs:
         LIVY_HOME: ./livy-${{ matrix.livy }}-bin
       run: |
         source ~/.environ  # apply environment that is configured in 'Install python dependencies' step
-        mvn test -B -Pspark-${{matrix.spark}} -Phadoop2 -pl livy
+        mvn verify -B -DskipRat -Pspark-${{matrix.spark}} -Phadoop2 -pl livy
