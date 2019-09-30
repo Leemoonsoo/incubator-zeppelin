@@ -162,7 +162,7 @@ jobs:
         sudo mkdir -p /var/run/mysqld
         sudo chown mysql:mysql /var/run/mysqld
         sudo mysqld_safe --skip-grant-tables &
-    - name: Install python dependencies
+    - name: Install external dependencies
       env:
         PYTHON: ${{ matrix.python }}
         SCALA_VER: ${{ matrix.scala }}
@@ -189,9 +189,11 @@ jobs:
         include:
           - livy: "0.5.0-incubating"
             spark: "1.6"
+            spark_pkg: "1.6.3"
             python: "2"
           - livy: "0.5.0-incubating"
             spark: "2.2"
+            spark_pkg: "2.2.0"
             python: "3"
     steps:
     - uses: actions/checkout@v1
@@ -201,11 +203,11 @@ jobs:
         java-version: 1.8
     - name: Download Spark
       run: |
-        ./testing/downloadSpark.sh ${{ matrix.spark }} 2.6
+        ./testing/downloadSpark.sh ${{ matrix.spark_pkg }} 2.6
     - name: Download Livy
       run: |
         ./testing/downloadLivy.sh ${{ matrix.livy }}
-    - name: Install python dependencies
+    - name: Install external dependencies
       env:
         PYTHON: ${{ matrix.python }}
       run: |
@@ -219,7 +221,7 @@ jobs:
       env:
         LIVY_VER: ${{ matrix.livy}}
         LIVY_HOME: ./livy-${{ matrix.livy }}-bin
-        SPARK_HOME: ./spark-${{ matrix.spark }}-bin-hadoop2.6
+        SPARK_HOME: ./spark-${{ matrix.spark_pkg }}-bin-hadoop2.6
       run: |
         source ~/.environ  # apply environment that is configured in 'Install python dependencies' step
         mvn verify -B -DskipRat -Pspark-${{matrix.spark}} -Phadoop2 -pl livy
