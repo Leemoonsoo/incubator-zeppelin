@@ -199,6 +199,9 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 1.8
+    - name: Download Spark
+      run: |
+        ./testing/downloadSpark.sh ${{ matrix.spark }} 2.6
     - name: Download Livy
       run: |
         ./testing/downloadLivy.sh ${{ matrix.livy }}
@@ -216,6 +219,7 @@ jobs:
       env:
         LIVY_VER: ${{ matrix.livy}}
         LIVY_HOME: ./livy-${{ matrix.livy }}-bin
+        SPARK_HOME: ./spark-${{ matrix.spark }}-bin-hadoop2.6
       run: |
         source ~/.environ  # apply environment that is configured in 'Install python dependencies' step
         mvn verify -B -DskipRat -Pspark-${{matrix.spark}} -Phadoop2 -pl livy
