@@ -184,7 +184,7 @@ jobs:
     runs-on: ubuntu-18.04
     strategy:
       matrix:
-        livy: "0.5.0-incubating"
+        livy: ["0.5.0-incubating"]
         include:
           - spark: "1.6"
             python: "2"
