@@ -132,12 +132,6 @@ jobs:
           - spark: ["1.6", "2.0", "2.1", "2.2"]
             python: "3"
             scala: "2.10"
-          - spark: "2.3"
-            python: "3"
-            scala: "2.11"
-          - spark: "2.4"
-            python: ["2", "3"]
-            scala: ["2.11", "2.12"]
     steps:
     - uses: actions/checkout@v1
     - name: Set up JDK 1.8
