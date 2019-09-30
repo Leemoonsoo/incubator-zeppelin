@@ -241,6 +241,7 @@ public abstract class ClusterManager {
             .withProtocol(protocol)
             .build();
 
+        LOGGER.info("Cluster member Ids " + clusterMemberIds);
         raftClient.connect(clusterMemberIds).join();
 
         raftSessionClient = createProxy(raftClient);
