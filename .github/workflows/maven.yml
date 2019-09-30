@@ -214,7 +214,7 @@ jobs:
     - name: Run test
       env:
         LIVY_VER: ${{ matrix.livy}}
-        LIVY_HOME: `pwd`/livy-${{ matrix.livy }}-bin
+        LIVY_HOME: ./livy-${{ matrix.livy }}-bin
       run: |
         source ~/.environ  # apply environment that is configured in 'Install python dependencies' step
         mvn test -B -Pspark-${{matrix.spark}} -Phadoop2 -pl livy
