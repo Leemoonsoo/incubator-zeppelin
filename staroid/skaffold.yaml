@@ -6,10 +6,10 @@ build:
       context: .
       docker:
         dockerfile: ./staroid/docker/zeppelin/Dockerfile
-#    - image: zeppelin-interpreter
-#      context: .
-#      docker:
-#        dockerfile: ./staroid/docker/interpreter/Dockerfile
+    - image: zeppelin-interpreter
+      context: .
+      docker:
+        dockerfile: ./staroid/docker/interpreter/Dockerfile
     - image: spark
       context: ./staroid/docker/spark/
   local:
