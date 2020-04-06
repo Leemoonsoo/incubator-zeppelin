@@ -11,6 +11,7 @@ RUN apt-get -y update && \
 RUN wget https://www-us.apache.org/dist/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz -P /tmp/ && \
     tar xf /tmp/apache-maven-*.tar.gz -C /opt
 ENV PATH="/opt/apache-maven-3.6.3/bin:${PATH}"
+ENV MAVEN_CLI_OPTS="--no-transfer-progress"
 
 WORKDIR /zeppelin
 COPY ./ /zeppelin/
