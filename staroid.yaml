@@ -5,4 +5,3 @@ deploy:
 ingress:
   - serviceName: zeppelin-server
     port: 8080
-
