@@ -12,6 +12,8 @@ build:
 #        dockerfile: ./staroid/docker/interpreter/Dockerfile
     - image: spark
       context: ./staroid/docker/spark/
+  local:
+    concurrency: 2
 deploy:
   kubectl:
     manifests:
