@@ -7,7 +7,7 @@ RUN apt-get -y update && \
     apt-get install -y wget openjdk-8-jdk && \
     rm -rf /var/lib/apt/lists/*
 
-RUN wget https://www-us.apache.org/dist/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz -P /tmp/ && \
+RUN wget -q https://www-us.apache.org/dist/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz -P /tmp/ && \
     tar xf /tmp/apache-maven-*.tar.gz -C /opt
 ENV PATH="/opt/apache-maven-3.6.3/bin:${PATH}"
 ENV MAVEN_CLI_OPTS="--no-transfer-progress"
