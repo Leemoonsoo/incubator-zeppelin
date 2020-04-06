@@ -41,7 +41,7 @@ ENV LOG_TAG="[ZEPPELIN_${Z_VERSION}]:" \
 
 RUN groupadd --gid $ZEPPELIN_GROUP_ID zeppelin \
     && useradd -ms /bin/bash -d ${Z_HOME} zeppelin --uid $ZEPPELIN_USER_ID --gid $ZEPPELIN_GROUP_ID
-USER zeppelin
+USER 2100
 
 # essential python packages to make python interpreter work
 RUN pip install --no-cache-dir ipython==5.4.1 jupyter_client==5.1.0 ipykernel==4.7.0 grpcio==1.8.2

@@ -1,4 +1,4 @@
-FROM ubuntu:16.04 AS builder
+FROM ubuntu:18.04 AS builder
 
 ENV JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
 
@@ -25,7 +25,7 @@ RUN curl -sL https://deb.nodesource.com/setup_10.x | sh - && \
     cd zeppelin-web-angular && npm install && npm install -g @angular/cli && npm run build:projects && \
     cd ..
 
-RUN cd zeppelin-web && mvn -B -T 2C package -DskipTests
+# RUN cd zeppelin-web && mvn -B -T 2C package -DskipTests
 RUN mvn -B -T 2C package -DskipTests -Pweb-angular -Pscala-2.11 -Pbuild-distr -pl '!groovy,!submarine,!livy,!hbase,!pig,!file,!flink,!ignite,!kylin,!lens,!cassandra,!elasticsearch,!bigquery,!alluxio,!scio,!neo4j,!sap,!scalding,!java,!beam,!hazelcastjet,!geode,!ksql,!sparql,!:launcher-docker,!:launcher-cluster,!:launcher-flink' && \
     cd zeppelin-distribution/target/zeppelin-0.9.0-SNAPSHOT/zeppelin-0.9.0-SNAPSHOT && \
     mkdir -p zeppelin-web/dist && mkdir -p zeppelin-web-angular/dist && \
@@ -52,7 +52,7 @@ ENV LOG_TAG="[ZEPPELIN_${Z_VERSION}]:" \
     ZEPPELIN_ADDR="0.0.0.0"
 
 RUN addgroup -S --gid $ZEPPELIN_GROUP_ID zeppelin && adduser -S --uid $ZEPPELIN_USER_ID zeppelin -G zeppelin
-USER zeppelin
+USER 2100
 
 COPY --chown=zeppelin:zeppelin --from=builder /zeppelin/zeppelin-distribution/target/zeppelin-0.9.0-SNAPSHOT/zeppelin-0.9.0-SNAPSHOT /zeppelin
 
