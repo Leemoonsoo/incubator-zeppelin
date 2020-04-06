@@ -24,8 +24,8 @@ RUN curl -sL https://deb.nodesource.com/setup_10.x | sh - && \
     cd zeppelin-web-angular && npm install && npm install -g @angular/cli && npm run build:projects && \
     cd ..
 
-RUN cd zeppelin-web && mvn package -DskipTests
-RUN mvn package -DskipTests -Pweb-angular -Pscala-2.11 -Pbuild-distr -pl '!groovy,!submarine,!livy,!hbase,!pig,!file,!flink,!ignite,!kylin,!lens,!cassandra,!elasticsearch,!bigquery,!alluxio,!scio,!neo4j,!sap,!scalding,!java,!beam,!hazelcastjet,!geode,!ksql,!sparql,!:launcher-docker,!:launcher-cluster,!:launcher-flink' && \
+RUN cd zeppelin-web && mvn -B -T 2C package -DskipTests
+RUN mvn -B -T 2C package -DskipTests -Pweb-angular -Pscala-2.11 -Pbuild-distr -pl '!groovy,!submarine,!livy,!hbase,!pig,!file,!flink,!ignite,!kylin,!lens,!cassandra,!elasticsearch,!bigquery,!alluxio,!scio,!neo4j,!sap,!scalding,!java,!beam,!hazelcastjet,!geode,!ksql,!sparql,!:launcher-docker,!:launcher-cluster,!:launcher-flink' && \
     cd zeppelin-distribution/target/zeppelin-0.9.0-SNAPSHOT/zeppelin-0.9.0-SNAPSHOT && \
     mkdir -p zeppelin-web/dist && mkdir -p zeppelin-web-angular/dist && \
     cd zeppelin-web/dist && jar xf ../../zeppelin-web-0.9.0-SNAPSHOT.war && rm -f ../../zeppelin-web-0.9.0-SNAPSHOT.war && \

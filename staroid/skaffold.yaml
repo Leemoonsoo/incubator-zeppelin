@@ -1,0 +1,19 @@
+apiVersion: skaffold/v1
+kind: Config
+build:
+  artifacts:
+    - image: zeppelin-server
+      context: .
+      docker:
+        dockerfile: ./staroid/docker/zeppelin/Dockerfile
+    - image: zeppelin
+      context: .
+      docker:
+        dockerfile: ./staroid/docker/interpreter/Dockerfile
+    - image: spark
+      context: ./staroid/docker/spark/
+deploy:
+  kubectl:
+    manifests:
+      - staroid/k8s/zeppelin-server.yaml
+
