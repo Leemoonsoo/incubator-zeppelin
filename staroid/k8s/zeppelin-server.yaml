@@ -8,7 +8,7 @@ spec:
   automountServiceAccountToken: true
   initContainers:
   - name: get-zeppelin-image-tag
-    image: zeppelin
+    image: zeppelin-server
     command: ["/bin/bash", "-c"]
     args:
     - |
