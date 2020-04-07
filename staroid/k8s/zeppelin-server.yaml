@@ -40,7 +40,9 @@ spec:
     - name: ZEPPELIN_SERVER_RPC_PORTRANGE
       value: 12320:12320
     - name: ZEPPELIN_WAR
-      value: /zeppelin/webapps
+      value: /zeppelin/zeppelin-web/dist
+    - name: ZEPPELIN_ANGULAR_WAR
+      value: /zeppelin/zeppelin-web-angular/dist
     - name: POD_UID
       valueFrom:
         fieldRef:
