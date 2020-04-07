@@ -34,11 +34,14 @@ RUN mvn -B -T 2C package -DskipTests -Pweb-angular -Pscala-2.11 -Pbuild-distr -p
     cd ../..
 
 # container image
-FROM openjdk:8-jre-alpine
+FROM ubuntu:18.04
+
+RUN apt-get -y update && \
+    apt-get install -y curl openjdk-8-jre-headless && \
+    apt-get clean
 
 ADD https://storage.googleapis.com/kubernetes-release/release/v1.16.3/bin/linux/amd64/kubectl /usr/local/bin/kubectl
-RUN chmod +x /usr/local/bin/kubectl && \
-    apk add --no-cache bash curl ca-certificates
+RUN chmod +x /usr/local/bin/kubectl
 
 ARG ZEPPELIN_USER_ID=2100
 ARG ZEPPELIN_GROUP_ID=2100
@@ -51,7 +54,8 @@ ENV LOG_TAG="[ZEPPELIN_${Z_VERSION}]:" \
     LC_ALL=en_US.UTF-8 \
     ZEPPELIN_ADDR="0.0.0.0"
 
-RUN addgroup -S --gid $ZEPPELIN_GROUP_ID zeppelin && adduser -S --uid $ZEPPELIN_USER_ID zeppelin -G zeppelin
+RUN groupadd --gid $ZEPPELIN_GROUP_ID zeppelin \
+    && useradd -ms /bin/bash -d ${Z_HOME} zeppelin --uid $ZEPPELIN_USER_ID --gid $ZEPPELIN_GROUP_ID
 USER 2100
 
 COPY --chown=zeppelin:zeppelin --from=builder /zeppelin/zeppelin-distribution/target/zeppelin-0.9.0-SNAPSHOT/zeppelin-0.9.0-SNAPSHOT /zeppelin
