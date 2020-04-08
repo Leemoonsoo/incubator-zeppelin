@@ -7,11 +7,14 @@ ingress:
     port: 8080
 release:
   paramGroups:
-  - name: General configurations
+  - name: Advanced configurations
+    collapsed: true
     params:
-    - name: ZEPPELIN_K8S_KUBECTL
+    - name: zeppelin-server memory
       type: STRING
-      description: Kubectl command
-      defaultValue: kubectl
+      description: Server daemon memory (e.g. 2GB, 1500MB)
+      defaultValue: 2GB
+      pattern: "[0-9]+[GMK]B"
       paths:
-      - Pod:zeppelin-server:spec.containers[0].env[4].value
+      - Pod:zeppelin-server:spec.containers[0].resources.requests.memory
+      - Pod:zeppelin-server:spec.containers[0].resources.limits.memory
