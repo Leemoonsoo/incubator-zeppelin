@@ -40,8 +40,8 @@ RUN apt-get -y update && \
     apt-get install -y curl openjdk-8-jre-headless && \
     apt-get clean
 
-ADD https://storage.googleapis.com/kubernetes-release/release/v1.16.3/bin/linux/amd64/kubectl /usr/local/bin/kubectl
-RUN chmod +x /usr/local/bin/kubectl
+ADD https://storage.googleapis.com/kubernetes-release/release/v1.16.3/bin/linux/amd64/kubectl /usr/bin/kubectl
+RUN chmod +x /usr/bin/kubectl
 
 ARG ZEPPELIN_USER_ID=2100
 ARG ZEPPELIN_GROUP_ID=2100
