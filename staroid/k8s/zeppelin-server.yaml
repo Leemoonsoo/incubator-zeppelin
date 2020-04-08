@@ -62,6 +62,8 @@ spec:
           fieldPath: metadata.name
     - name: MASTER   # default value of master property for spark interpreter.
       value: k8s://https://kubernetes.default.svc
+    - name: SPARK_HOME # default value of 'SPARK_HOME' property for spark interpreter.
+      value: /spark
     resources:
       requests:
         cpu: "100m"
