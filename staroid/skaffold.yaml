@@ -12,6 +12,9 @@ build:
         dockerfile: ./staroid/docker/interpreter/Dockerfile
     - image: spark
       context: ./staroid/docker/spark/
+  tagPolicy:
+    gitCommit:
+      variant: CommitSha
   local:
     concurrency: 2
 deploy:
