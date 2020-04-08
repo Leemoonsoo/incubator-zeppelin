@@ -5,4 +5,13 @@ deploy:
 ingress:
   - serviceName: zeppelin-server
     port: 8080
-
+release:
+  paramGroups:
+  - name: General configurations
+    params:
+    - name: ZEPPELIN_K8S_KUBECTL
+      type: STRING
+      description: Kubectl command
+      defaultValue: kubectl
+      paths:
+      - Pod:zeppelin-server:spec.containers[0].env[4].value

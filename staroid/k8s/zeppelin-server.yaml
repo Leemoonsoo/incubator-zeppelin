@@ -43,6 +43,8 @@ spec:
       value: /zeppelin/zeppelin-web/dist
     - name: ZEPPELIN_ANGULAR_WAR
       value: /zeppelin/zeppelin-web-angular/dist
+    - name: ZEPPELIN_K8S_KUBECTL
+      value: kubectl
     - name: POD_UID
       valueFrom:
         fieldRef:
