@@ -18,6 +18,13 @@ COPY ./ /zeppelin/
 
 RUN rm -rf .git
 
+RUN curl -sL https://deb.nodesource.com/setup_10.x | sh - && \
+    apt-get install -y nodejs && \
+    cd zeppelin-web && npm install -g bower && bower install --allow-root && \
+    cd .. && \
+    cd zeppelin-web-angular && npm install && npm install -g @angular/cli && npm run build:projects && \
+    cd ..
+
 RUN mvn -B -T 2C package -DskipTests -Pweb-angular -Pscala-2.11 -Pbuild-distr -pl '!groovy,!submarine,!livy,!hbase,!pig,!file,!flink,!ignite,!kylin,!lens,!cassandra,!elasticsearch,!bigquery,!alluxio,!scio,!neo4j,!sap,!scalding,!java,!beam,!hazelcastjet,!geode,!ksql,!sparql,!:launcher-docker,!:launcher-cluster,!:launcher-flink' && \
     cd zeppelin-distribution/target/zeppelin-0.9.0-SNAPSHOT/zeppelin-0.9.0-SNAPSHOT && \
     mkdir -p zeppelin-web/dist && mkdir -p zeppelin-web-angular/dist && \
