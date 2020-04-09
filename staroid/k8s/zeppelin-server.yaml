@@ -25,12 +25,12 @@ spec:
       mountPath: /entrypoint
     - name: notebook-volume
       mountPath: /notebook      
-  - name: mount-spark-image-tag # mount container here so get-zeppelin-image-tag can get spark iamge tag using kubectl
+  - name: mount-spark-image-tag # mount container here so get-zeppelin-image-tag can get spark iamge tag using kubectl, see https://github.com/GoogleContainerTools/skaffold/issues/3269
     image: spark
     command: ["/bin/bash", "-c"]
     args:
     - exit 0
-  - name: mount-zeppelin-interpreter-image-tag # mount container here so get-zeppelin-image-tag can get spark iamge tag using kubectl
+  - name: mount-zeppelin-interpreter-image-tag # mount container here so get-zeppelin-image-tag can get spark iamge tag using kubectl, see https://github.com/GoogleContainerTools/skaffold/issues/3269
     image: zeppelin-interpreter
     command: ["/bin/bash", "-c"]
     args:
