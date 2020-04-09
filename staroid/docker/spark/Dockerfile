@@ -8,6 +8,8 @@ ARG SPARK_GROUP_ID=2100
 
 RUN groupadd --gid $SPARK_GROUP_ID spark \
     && useradd -ms /bin/bash spark --uid $SPARK_USER_ID --gid $SPARK_GROUP_ID
+
+RUN chown -R spark:spark /opt/spark/work-dir
 USER 2100
 
 ENTRYPOINT [ "/opt/entrypoint.sh" ]
