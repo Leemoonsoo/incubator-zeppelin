@@ -17,10 +17,8 @@ spec:
       SPARK_IMAGE=`kubectl get pods zeppelin-server -o jsonpath="{..image}" | tr " " "\n" | grep "spark:" | head -1` &&
       echo "#!/bin/bash" >> /entrypoint/run.sh &&
       echo "export ZEPPELIN_K8S_SPARK_CONTAINER_IMAGE=${SPARK_IMAGE}" >> /entrypoint/run.sh &&
-      echo "export ZEPPELIN_K8S_CONTAINER_IMAGE=${ZEPPELIN_IMAGE}" >> /entrypoint/run.sh
-
-      SERVICE_DOMAIN=`kubectl get configmaps staroid-envs -o jsonpath="{..data.STAROID_SERVICE_DOMAIN}"`
-      echo "export ZEPPELIN_JAVA_OPTS=-Dzeppelin.spark.uiWebUrl=https://p4040-zeppelin-server--${SERVICE_DOMAIN}" >> /entrypoint/run.sh
+      echo "export ZEPPELIN_K8S_CONTAINER_IMAGE=${ZEPPELIN_IMAGE}" >> /entrypoint/run.sh &&
+      echo "export ZEPPELIN_JAVA_OPTS=-Dzeppelin.spark.uiWebUrl=https://p{{PORT}}-{{SERVICE_NAME}}--{{SERVICE_DOMAIN}}" >> /entrypoint/run.sh &&
 
       echo "/zeppelin/bin/zeppelin.sh" >> /entrypoint/run.sh &&
       chmod +x /entrypoint/run.sh
@@ -52,6 +50,11 @@ spec:
       value: /zeppelin/zeppelin-web/dist
     - name: ZEPPELIN_ANGULAR_WAR
       value: /zeppelin/zeppelin-web-angular/dist
+    - name: SERVICE_DOMAIN
+      valueFrom:
+        configMapKeyRef:
+          name: staroid-envs
+          key: STAROID_SERVICE_DOMAIN
     - name: POD_UID
       valueFrom:
         fieldRef:
