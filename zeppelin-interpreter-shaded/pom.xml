@@ -55,7 +55,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
-        <version>${plugin.shade.version}</version>
         <configuration>
           <artifactSet>
             <excludes>
@@ -105,8 +104,6 @@
               <excludes>
                 <exclude>org/apache/zeppelin/*</exclude>
                 <exclude>org/apache/zeppelin/**/*</exclude>
-                <exclude>org/apache/thrift/*</exclude>
-                <exclude>org/apache/thrift/**/*</exclude>
                 <exclude>org/slf4j/*</exclude>
                 <exclude>org/slf4j/**/*</exclude>
                 <exclude>org/apache/commons/logging/*</exclude>
@@ -154,7 +151,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-antrun-plugin</artifactId>
-        <version>1.8</version>
         <executions>
           <execution>
             <id>copy-to-interpreter</id>

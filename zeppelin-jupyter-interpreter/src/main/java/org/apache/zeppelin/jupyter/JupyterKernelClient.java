@@ -20,7 +20,7 @@ package org.apache.zeppelin.jupyter;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
-import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.zeppelin.interpreter.InterpreterContext;
 import org.apache.zeppelin.interpreter.InterpreterResult;
 import org.apache.zeppelin.interpreter.InterpreterResultMessageOutput;
@@ -196,6 +196,9 @@ public class JupyterKernelClient {
             } catch (IOException e) {
               LOGGER.error("Unexpected IOException", e);
             }
+            break;
+          case CLEAR:
+            interpreterOutput.getInterpreterOutput().clear();
             break;
           default:
             LOGGER.error("Unrecognized type:" + executeResponse.getType());

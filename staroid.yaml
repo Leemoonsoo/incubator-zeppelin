@@ -1,0 +1,20 @@
+apiVersion: beta/v1
+deploy:
+  skaffold:
+    file: staroid/skaffold.yaml
+ingress:
+  - serviceName: zeppelin-server
+    port: 8080
+release:
+  paramGroups:
+  - name: Advanced configurations
+    collapsed: true
+    params:
+    - name: zeppelin-server memory
+      type: STRING
+      description: Server daemon memory (e.g. 2Gi, 1500Mi)
+      defaultValue: 2Gi
+      pattern: "[0-9]+[GM]i"
+      paths:
+      - Pod:zeppelin-server:spec.containers[0].resources.requests.memory
+      - Pod:zeppelin-server:spec.containers[0].resources.limits.memory

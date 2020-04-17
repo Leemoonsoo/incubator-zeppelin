@@ -65,7 +65,8 @@ public class Message implements JsonSerializable {
     IMPORT_NOTE,      // [c-s] import notebook
                       // @param object notebook
 
-    CONVERT_NOTE_NBFORMAT,     // converting note to nbformat
+    CONVERT_NOTE_NBFORMAT,     // [c-s] converting note to nbformat
+    CONVERTED_NOTE_NBFORMAT,     // [s-c] converting note to nbformat
 
     NOTE_UPDATE,
 
@@ -172,6 +173,7 @@ public class Message implements JsonSerializable {
     UNSUBSCRIBE_UPDATE_NOTE_JOBS, // [c-s] unsubscribe job information for job management
     // @param unixTime
     GET_INTERPRETER_BINDINGS,    // [c-s] get interpreter bindings
+    SAVE_INTERPRETER_BINDINGS,    // [c-s] save interpreter bindings
     INTERPRETER_BINDINGS,         // [s-c] interpreter bindings
 
     GET_INTERPRETER_SETTINGS,     // [c-s] get interpreter settings

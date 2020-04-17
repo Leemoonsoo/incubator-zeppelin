@@ -270,12 +270,12 @@ function WebsocketMessageService($rootScope, websocketEvents) {
       });
     },
 
-    convertNote: function(note, name) {
+    convertNote: function(noteId, noteName) {
       websocketEvents.sendNewEvent({
         op: 'CONVERT_NOTE_NBFORMAT',
         data: {
-          note: note,
-          name: name,
+          noteId: noteId,
+          noteName: noteName,
         },
       });
     },
@@ -363,8 +363,8 @@ function WebsocketMessageService($rootScope, websocketEvents) {
     },
 
     saveInterpreterBindings: function(noteId, selectedSettingIds) {
-      // websocketEvents.sendNewEvent({op: 'SAVE_INTERPRETER_BINDINGS',
-      //   data: {noteId: noteId, selectedSettingIds: selectedSettingIds}});
+      websocketEvents.sendNewEvent({op: 'SAVE_INTERPRETER_BINDINGS',
+        data: {noteId: noteId, selectedSettingIds: selectedSettingIds}});
     },
 
     listConfigurations: function() {
