@@ -54,7 +54,7 @@ COPY --chown=zeppelin:zeppelin --from=builder /zeppelin/conf /zeppelin/conf
 COPY --chown=zeppelin:zeppelin --from=builder /zeppelin/interpreter /zeppelin/interpreter
 COPY --chown=zeppelin:zeppelin --from=builder /zeppelin/zeppelin-interpreter/target/lib /zeppelin/lib
 COPY --chown=zeppelin:zeppelin --from=builder /zeppelin/zeppelin-interpreter/target/*.jar /zeppelin/lib/
-ADD ./staroid/conf/log4j.properties /zeppelin/conf/log4j.properties
+ADD ./.staroid/conf/log4j.properties /zeppelin/conf/log4j.properties
 
 WORKDIR ${Z_HOME}
 CMD ["sh", "/zeppelin/bin/zeppelin.sh"]
