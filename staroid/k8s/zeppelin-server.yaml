@@ -1,0 +1,117 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: zeppelin-server
+  labels:
+    app: zeppelin-server
+spec:
+  automountServiceAccountToken: true
+  initContainers:
+  - name: get-zeppelin-image-tag
+    image: zeppelin-server
+    command: ["/bin/bash", "-c"]
+    args:
+    - |
+      [ "$(ls /notebook)" ] || cp -rv /zeppelin/notebook/* /notebook/ &&
+      ZEPPELIN_IMAGE=`kubectl get pods zeppelin-server -o jsonpath="{..image}" | tr " " "\n" | grep "zeppelin-interpreter:" | head -1` &&
+      SPARK_IMAGE=`kubectl get pods zeppelin-server -o jsonpath="{..image}" | tr " " "\n" | grep "spark:" | head -1` &&
+      echo "#!/bin/bash" >> /entrypoint/run.sh &&
+      echo "export ZEPPELIN_K8S_SPARK_CONTAINER_IMAGE=${SPARK_IMAGE}" >> /entrypoint/run.sh &&
+      echo "export ZEPPELIN_K8S_CONTAINER_IMAGE=${ZEPPELIN_IMAGE}" >> /entrypoint/run.sh &&
+      echo "export ZEPPELIN_JAVA_OPTS=-Dzeppelin.spark.uiWebUrl=https://p{{PORT}}-{{SERVICE_NAME}}--{{SERVICE_DOMAIN}}" >> /entrypoint/run.sh &&
+
+      echo "/zeppelin/bin/zeppelin.sh" >> /entrypoint/run.sh &&
+      chmod +x /entrypoint/run.sh
+    volumeMounts:
+    - name: entrypoint-volume
+      mountPath: /entrypoint
+    - name: notebook-volume
+      mountPath: /notebook      
+  - name: mount-spark-image-tag # mount container here so get-zeppelin-image-tag can get spark iamge tag using kubectl, see https://github.com/GoogleContainerTools/skaffold/issues/3269
+    image: spark
+    command: ["/bin/bash", "-c"]
+    args:
+    - exit 0
+  - name: mount-zeppelin-interpreter-image-tag # mount container here so get-zeppelin-image-tag can get spark iamge tag using kubectl, see https://github.com/GoogleContainerTools/skaffold/issues/3269
+    image: zeppelin-interpreter
+    command: ["/bin/bash", "-c"]
+    args:
+    - exit 0
+  containers:
+  - name: apache-zeppelin
+    image: zeppelin-server
+    command: ["/entrypoint/run.sh"]
+    env:
+    - name: ZEPPELIN_HOME
+      value: /zeppelin
+    - name: ZEPPELIN_SERVER_RPC_PORTRANGE
+      value: 12320:12320
+    - name: ZEPPELIN_WAR
+      value: /zeppelin/zeppelin-web/dist
+    - name: ZEPPELIN_ANGULAR_WAR
+      value: /zeppelin/zeppelin-web-angular/dist
+    - name: SERVICE_DOMAIN
+      valueFrom:
+        configMapKeyRef:
+          name: staroid-envs
+          key: STAROID_SERVICE_DOMAIN
+    - name: POD_UID
+      valueFrom:
+        fieldRef:
+          apiVersion: v1
+          fieldPath: metadata.uid
+    - name: POD_NAME
+      valueFrom:
+        fieldRef:
+          apiVersion: v1
+          fieldPath: metadata.name
+    - name: MASTER   # default value of master property for spark interpreter.
+      value: k8s://https://kubernetes.default.svc
+    - name: SPARK_HOME # default value of 'SPARK_HOME' property for spark interpreter.
+      value: /spark
+    resources:
+      requests:
+        cpu: "100m"
+        memory: "2000Mi"
+      limits:
+        cpu: "1000m"
+        memory: "2000Mi"
+    volumeMounts:
+    - name: entrypoint-volume
+      mountPath: /entrypoint
+    - name: notebook-volume
+      mountPath: /zeppelin/notebook
+  volumes:
+  - name: entrypoint-volume
+    emptyDir: {}
+  - name: notebook-volume
+    persistentVolumeClaim:
+      claimName: notebook-pvc
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: zeppelin-server
+spec:
+  ports:
+  - name: http
+    port: 8080
+    targetPort: 8080
+  - name: rpc            # port name is referenced in the code. So it shouldn't be changed.
+    port: 12320
+  selector:
+    app: zeppelin-server
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: notebook-pvc
+  annotations:
+    storage.zarvis.ai/scope: PerProjectUser # PerProject or PerProjectUser
+spec:
+  accessModes:
+    - ReadWriteMany
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 1Gi
