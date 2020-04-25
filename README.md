@@ -11,6 +11,25 @@ Key features
   - Markdown, Shell, Spark, Python, JDBC interpreters are included
   - Clone and customize as you want
   
+#### Screenshots
+
+<sub>Click to Launch, no installation or complex configuration</sub>
+
+<img src="https://user-images.githubusercontent.com/1540981/80290413-ae736c00-86f9-11ea-9a85-d479c285e1bf.png" width="600px" />
+<img src="https://user-images.githubusercontent.com/1540981/80290354-8126be00-86f9-11ea-8bd7-cdeadbd32db6.png" width="600px" />
+
+
+<sub>Click 'Open' button and bring Zeppelin notebook</sub>
+
+<img src="https://user-images.githubusercontent.com/1540981/80290427-bcc18800-86f9-11ea-8626-d899218dd3a1.png" width="600px" />
+
+<sub>Spark on Kubernetes works out of the box</sub>
+
+<img src="https://user-images.githubusercontent.com/1540981/80290438-cf3bc180-86f9-11ea-8c1f-d2dedcd48a86.png" width="600px" />
+
+<sub>Access to Spark UI</sub>
+
+<img src="https://user-images.githubusercontent.com/1540981/80290443-d8c52980-86f9-11ea-999c-eeafab25cf38.png" width="600px" />
 
 ## Branch
 
