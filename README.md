@@ -8,6 +8,15 @@
 Key features
   - Zeppelin-0.9.0-SNNAPSHOT on Kubernetes
   - Spark on Kubernetes integration
+
+    ```
+    %spark.conf
+    spark.executor.instances 3
+
+    %spark
+    // run spark API. 3 instances of worker will be automatically created
+    ```
+  - Spark UI integration
   - Markdown, Shell, Spark, Python, JDBC interpreters are included
   - Clone and customize as you want
   
