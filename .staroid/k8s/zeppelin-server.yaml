@@ -69,6 +69,10 @@ spec:
       value: k8s://https://kubernetes.default.svc
     - name: SPARK_HOME # default value of 'SPARK_HOME' property for spark interpreter.
       value: /spark
+    - name: ZEPPELIN_K8S_SERVICE_NAME
+      value: zeppelin-server
+    - name: ZEPPELIN_INTERPRETER_CONNECT_TIMEOUT
+      value: "240000" # node provisioning can take some time
     resources:
       requests:
         cpu: "100m"
