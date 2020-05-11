@@ -37,6 +37,16 @@ spec:
     - name: {{key}}
       value: {{value}}
   {% endfor %}
+  {% if zeppelin.k8s.interpreter.cores is defined and zeppelin.k8s.interpreter.memory is defined %}
+    resources:
+      requests:
+        memory: "{{zeppelin.k8s.interpreter.memory}}"
+        cpu: "{{zeppelin.k8s.interpreter.cores}}"
+    {# without limits.memory, will see error 'must be less than or equal to memory limit' #}
+      limits:
+        memory: "{{zeppelin.k8s.interpreter.memory}}"
+        cpu: "{{zeppelin.k8s.interpreter.cores}}"
+  {% else %}
     resources:
       requests:
         cpu: "1000m"
@@ -44,6 +54,7 @@ spec:
       limits:
         cpu: "1000m"
         memory: "1000Mi"
+  {% endif %}
   {% if zeppelin.k8s.interpreter.group.name == "spark" %}
     volumeMounts:
     - name: spark-home
