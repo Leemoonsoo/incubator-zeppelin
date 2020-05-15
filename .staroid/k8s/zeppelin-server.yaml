@@ -111,7 +111,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: notebook-pvc
   annotations:
-    storage.staroid.com/scope: PerProjectUser # PerProject or PerProjectUser
+    storage.staroid.com/scope: Instance # Instance, PerProject or PerProjectUser
 spec:
   accessModes:
     - ReadWriteMany
