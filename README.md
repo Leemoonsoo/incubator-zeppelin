@@ -7,18 +7,16 @@
 
 ## Key features 🚀
 
-### Master snapshot
+- Master snapshot
 
-Access the latest features and improvements on the Apache Zeppelin, in a single click!
-No need to install or maintain Zeppelin to keep it up-to-dated.
+    Access the latest features and improvements on the Apache Zeppelin, in a single click!
+    No need to install or maintain Zeppelin to keep it up-to-dated.
 
-Markdown, Shell, Spark, Python, JDBC interpreters are included
+    Markdown, Shell, Spark, Python, JDBC interpreters are included
 
-### Kubernetes mode == Scalable
+- Kubernetes mode (== Scalable)
 
-Zeppelin on Kubernetes is enabled by default. Each interpreter runs on their own container.
-
-### Apache Spark integration
+    Zeppelin on Kubernetes is enabled by default. Each interpreter runs on their own container.
 
 - Zero maintenance Spark Cluster
 
@@ -43,14 +41,15 @@ Zeppelin on Kubernetes is enabled by default. Each interpreter runs on their own
     <img src="https://user-images.githubusercontent.com/1540981/80290443-d8c52980-86f9-11ea-999c-eeafab25cf38.png" width="700px" />
     
 
-### File manager
-You can upload/download file and access them in `/data` directory from the interpreter.
-<img src="https://user-images.githubusercontent.com/1540981/82079532-d79f7080-9697-11ea-99c5-5787f070dce9.gif" width="500px"/>
+- File manager
+
+    You can upload/download file and access them in `/data` directory from the interpreter.
+    <img src="https://user-images.githubusercontent.com/1540981/82079532-d79f7080-9697-11ea-99c5-5787f070dce9.gif" width="500px"/>
 
 
-### Customize your self.
+- Customize your self.
 
-Fork this repository and launch your customized version on [Staroid](https://staroid.com). No complex setup required. Just connect your forked Github repository and push commits.
+    Fork this repository and launch your customized version on [Staroid](https://staroid.com). No complex setup required. Just connect your forked Github repository and push commits.
 
 
 ## Branch
