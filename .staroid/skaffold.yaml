@@ -18,4 +18,28 @@ deploy:
   kubectl:
     manifests:
       - .staroid/k8s/zeppelin-server.yaml
-
+      - .staroid/k8s/data-volume.yaml
+profiles:
+  - name: prebuilt
+    patches:
+      - op: replace
+        path: /build/artifacts/0/docker/dockerfile
+        value: ./.staroid/docker/zeppelin/Dockerfile_prebuilt
+      - op: replace
+        path: /build/artifacts/1/docker/dockerfile
+        value: ./.staroid/docker/interpreter/Dockerfile_prebuilt
+    portForward:
+      - resourceType: Service
+        resourceName: zeppelin-server
+        port: 8080
+      - resourceType: Service
+        resourceName: file-manager
+        port: 8000
+  - name: minikube
+    deploy:
+      kubectl:
+        manifests:
+          - .staroid/k8s/minikube.yaml
+          - .staroid/k8s/zeppelin-server.yaml
+          - .staroid/k8s/data-volume.yaml
+  

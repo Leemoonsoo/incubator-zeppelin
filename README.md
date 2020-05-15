@@ -38,4 +38,14 @@ Check out [.staroid](https://github.com/open-datastudio/zeppelin/tree/master-sna
 | skaffold.yaml | skaffold config file |
 | conf | Zeppelin configuration files to override |
 | docker | Dockerfile to build images |
-| k8s | Kubernetes resource manifests to run zeppelin-server |
+| k8s | Kubernetes resource manifests |
+
+
+### Run locally with prebuilt image
+
+It takes 30~40 minutes to build all images while Zeppelin requires long time to build.
+`prebuilt` profile is included in skaffold.yaml so changes doesn't necessary to re-build Zeppelin can be tested quickly in local minikube environment.
+
+```
+skaffold dev -f .staroid/skaffold.yaml -p prebuilt,minikube port-forward
+```

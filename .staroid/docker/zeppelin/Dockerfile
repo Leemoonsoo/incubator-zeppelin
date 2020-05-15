@@ -59,7 +59,7 @@ USER 2100
 
 COPY --chown=zeppelin:zeppelin --from=builder /zeppelin/zeppelin-distribution/target/zeppelin-0.9.0-SNAPSHOT/zeppelin-0.9.0-SNAPSHOT /zeppelin
 COPY ./.staroid/conf/log4j.properties /zeppelin/conf/log4j.properties
-COPY ./.staroid/docker/zeppelin/100-interpreter-spec.yaml /zeppelin/k8s/interpreter/100-interpreter-spec.yaml
+COPY ./.staroid/k8s/100-interpreter-spec.yaml /zeppelin/k8s/interpreter/100-interpreter-spec.yaml
 
 EXPOSE 8080
 

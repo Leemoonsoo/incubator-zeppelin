@@ -1,0 +1,59 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: data-pvc
+  annotations:
+    storage.staroid.com/scope: Instance
+spec:
+  accessModes:
+    - ReadWriteMany
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: file-manager
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: file-manager
+  template:
+    metadata:
+      labels:
+        app: file-manager
+    spec:
+      securityContext:
+        runAsUser: 2100
+        runAsGroup: 2100
+      containers:
+      - name: cloudcmd
+        image: coderaiser/cloudcmd:14.5.1-alpine
+        args: [ "--one-file-panel", "--root", "/data" ]
+        volumeMounts:
+          - name: data-volume
+            mountPath: /data
+        env:
+          - name: HOME
+            value: /
+      volumes:
+        - name: data-volume
+          persistentVolumeClaim:
+            claimName: data-pvc
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: file-manager
+  annotations: 
+    service.staroid.com/link: "show"
+spec:
+  ports:
+  - name: http
+    port: 8000
+    targetPort: 8000
+  selector:
+    app: file-manager
