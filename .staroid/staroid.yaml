@@ -2,6 +2,7 @@ apiVersion: beta/v1
 deploy:
   skaffold:
     file: .staroid/skaffold.yaml
+    profile: prebuilt
 ingress:
   - serviceName: zeppelin-server
     port: 8080
