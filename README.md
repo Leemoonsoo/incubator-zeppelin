@@ -2,8 +2,7 @@
 
 [Apache Zeppelin](https://zeppelin.apache.org) on [Staroid](https://staroid.com).
 
-### [Click here to Launch on Staroid!](https://staroid.com/g/open-datastudio/zeppelin)
-
+[![Run](https://staroid.com/api/run/button.svg)](https://staroid.com/api/run)
 
 ## Key features 🚀
 
