@@ -1,11 +1,11 @@
 apiVersion: beta/v1
-deploy:
+build:
   skaffold:
     file: .staroid/skaffold.yaml
 ingress:
   - serviceName: zeppelin-server
     port: 8080
-release:
+deploy:
   paramGroups:
   - name: Advanced configurations
     collapsed: true
