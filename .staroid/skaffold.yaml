@@ -17,8 +17,10 @@ build:
 deploy:
   kubectl:
     manifests:
+      - .staroid/k8s/zeppelin-conf.yaml
       - .staroid/k8s/zeppelin-server.yaml
       - .staroid/k8s/data-volume.yaml
+      - .staroid/k8s/postgres.yaml
 profiles:
   - name: prebuilt
     patches:
@@ -40,6 +42,8 @@ profiles:
       kubectl:
         manifests:
           - .staroid/k8s/minikube.yaml
+          - .staroid/k8s/zeppelin-conf.yaml
           - .staroid/k8s/zeppelin-server.yaml
           - .staroid/k8s/data-volume.yaml
+          - .staroid/k8s/postgres.yaml
   

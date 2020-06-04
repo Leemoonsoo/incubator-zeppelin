@@ -82,5 +82,5 @@ It takes 30~40 minutes to build all images while Zeppelin requires long time to 
 `prebuilt` profile is included in skaffold.yaml so changes doesn't necessary to re-build Zeppelin can be tested quickly in local minikube environment.
 
 ```
-skaffold dev -f .staroid/skaffold.yaml -p prebuilt,minikube port-forward
+skaffold dev -f .staroid/skaffold.yaml -p prebuilt,minikube --port-forward
 ```
