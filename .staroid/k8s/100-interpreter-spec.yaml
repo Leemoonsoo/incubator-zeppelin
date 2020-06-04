@@ -37,6 +37,10 @@ spec:
     - name: {{key}}
       value: {{value}}
   {% endfor %}
+  {% if zeppelin.k8s.interpreter.group.name == "spark" %}
+    - name: SPARK_CONF_DIR
+      value: /spark/conf
+  {% endif %}
   {% if zeppelin.k8s.interpreter.cores is defined and zeppelin.k8s.interpreter.memory is defined %}
     resources:
       requests:
@@ -64,10 +68,12 @@ spec:
   initContainers:
   - name: spark-home-init
     image: {{zeppelin.k8s.spark.container.image}}
-    command: ["sh", "-c", "cp -r /opt/spark/* /spark/"]
+    command: ["sh", "-c", "cp -r /opt/spark/* /spark/ && cp -r /spark-conf /spark/conf"]
     volumeMounts:
     - name: spark-home
       mountPath: /spark
+    - name: spark-conf-volume
+      mountPath: /spark-conf
     resources:
       requests:
         cpu: "1000m"
@@ -78,6 +84,9 @@ spec:
   volumes:
   - name: spark-home
     emptyDir: {}
+  - name: spark-conf-volume
+    configMap:
+      name: spark-conf
   - name: data-volume
     persistentVolumeClaim:
       claimName: data-pvc
@@ -120,3 +129,16 @@ spec:
     {% endif %}
   selector:
     app: {{zeppelin.k8s.interpreter.pod.name}}
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: spark-conf
+data:
+  spark-defaults.conf: |
+    spark.sql.catalogImplementation                       hive
+    spark.hadoop.javax.jdo.option.ConnectionURL           jdbc:postgresql://metastore-postgres/hive
+    spark.hadoop.javax.jdo.option.ConnectionDriverName    org.postgresql.Driver
+    spark.hadoop.javax.jdo.option.ConnectionUserName      hive
+    spark.hadoop.javax.jdo.option.ConnectionPassword      hive
+    spark.hadoop.datanucleus.schema.autoCreateAll         true
