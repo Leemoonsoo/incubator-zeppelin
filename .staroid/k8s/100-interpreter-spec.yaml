@@ -142,3 +142,5 @@ data:
     spark.hadoop.javax.jdo.option.ConnectionUserName      hive
     spark.hadoop.javax.jdo.option.ConnectionPassword      hive
     spark.hadoop.datanucleus.schema.autoCreateAll         true
+    spark.hive.metastore.schema.verification              false
+    spark.jars.packages                                   org.postgresql:postgresql:42.2.13
