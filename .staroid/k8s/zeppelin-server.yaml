@@ -15,7 +15,7 @@ spec:
       [ "$(ls /notebook)" ] || cp -rv /zeppelin/notebook/* /notebook/ &&
       ZEPPELIN_IMAGE=`kubectl get pods zeppelin-server -o jsonpath="{..image}" | tr " " "\n" | grep "zeppelin-interpreter:" | head -1` &&
       SPARK_IMAGE=`kubectl get pods zeppelin-server -o jsonpath="{..image}" | tr " " "\n" | grep "spark:" | head -1` &&
-      SPARK_IMAGE=opendatastudio/spark:v3.1.0-snapshot-20200604-02
+      SPARK_IMAGE=opendatastudio/spark:v3.1.0-snapshot-20200606-01
       echo "#!/bin/bash" >> /entrypoint/run.sh &&
       echo "cp -f /zeppelin-conf/zeppelin-site.xml /zeppelin/conf/" >> /entrypoint/run.sh &&
       echo "export ZEPPELIN_K8S_SPARK_CONTAINER_IMAGE=${SPARK_IMAGE}" >> /entrypoint/run.sh &&
