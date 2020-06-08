@@ -14,11 +14,8 @@ spec:
     - |
       [ "$(ls /notebook)" ] || cp -rv /zeppelin/notebook/* /notebook/ &&
       ZEPPELIN_IMAGE=`kubectl get pods zeppelin-server -o jsonpath="{..image}" | tr " " "\n" | grep "zeppelin-interpreter:" | head -1` &&
-      SPARK_IMAGE=`kubectl get pods zeppelin-server -o jsonpath="{..image}" | tr " " "\n" | grep "spark:" | head -1` &&
-      SPARK_IMAGE=opendatastudio/spark:v3.1.0-snapshot-20200606-01
       echo "#!/bin/bash" >> /entrypoint/run.sh &&
       echo "cp -f /zeppelin-conf/zeppelin-site.xml /zeppelin/conf/" >> /entrypoint/run.sh &&
-      echo "export ZEPPELIN_K8S_SPARK_CONTAINER_IMAGE=${SPARK_IMAGE}" >> /entrypoint/run.sh &&
       echo "export ZEPPELIN_K8S_CONTAINER_IMAGE=${ZEPPELIN_IMAGE}" >> /entrypoint/run.sh &&
       echo "export ZEPPELIN_JAVA_OPTS='-Dzeppelin.spark.enableSupportedVersionCheck=false -Dzeppelin.spark.uiWebUrl=https://p{{PORT}}-{{SERVICE_NAME}}--{{SERVICE_DOMAIN}}'" >> /entrypoint/run.sh &&
       echo "/zeppelin/bin/zeppelin.sh" >> /entrypoint/run.sh &&
@@ -28,11 +25,6 @@ spec:
       mountPath: /entrypoint
     - name: notebook-volume
       mountPath: /notebook
-  - name: mount-spark-image-tag # mount container here so get-zeppelin-image-tag can get spark iamge tag using kubectl, see https://github.com/GoogleContainerTools/skaffold/issues/3269
-    image: spark
-    command: ["/bin/bash", "-c"]
-    args:
-    - exit 0
   - name: mount-zeppelin-interpreter-image-tag # mount container here so get-zeppelin-image-tag can get spark iamge tag using kubectl, see https://github.com/GoogleContainerTools/skaffold/issues/3269
     image: zeppelin-interpreter
     command: ["/bin/bash", "-c"]
@@ -70,6 +62,11 @@ spec:
       value: k8s://https://kubernetes.default.svc
     - name: SPARK_HOME # default value of 'SPARK_HOME' property for spark interpreter.
       value: /spark
+    - name: ZEPPELIN_K8S_SPARK_CONTAINER_IMAGE
+      valueFrom:
+        configMapKeyRef:
+          name: spark-conf
+          key: image 
     - name: ZEPPELIN_K8S_SERVICE_NAME
       value: zeppelin-server
     - name: ZEPPELIN_INTERPRETER_CONNECT_TIMEOUT

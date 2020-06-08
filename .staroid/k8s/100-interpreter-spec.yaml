@@ -65,6 +65,8 @@ spec:
       mountPath: /spark
     - name: data-volume
       mountPath: /data
+    - name: spark-pod-template-volume
+      mountPath: /spark-pod-template
   initContainers:
   - name: spark-home-init
     image: {{zeppelin.k8s.spark.container.image}}
@@ -87,6 +89,9 @@ spec:
   - name: spark-conf-volume
     configMap:
       name: spark-conf
+  - name: spark-pod-template-volume
+    configMap:
+      name: spark-pod-template
   - name: data-volume
     persistentVolumeClaim:
       claimName: data-pvc
@@ -129,18 +134,3 @@ spec:
     {% endif %}
   selector:
     app: {{zeppelin.k8s.interpreter.pod.name}}
----
-kind: ConfigMap
-apiVersion: v1
-metadata:
-  name: spark-conf
-data:
-  spark-defaults.conf: |
-    spark.sql.catalogImplementation                       hive
-    spark.hadoop.javax.jdo.option.ConnectionURL           jdbc:postgresql://metastore-postgres/hive
-    spark.hadoop.javax.jdo.option.ConnectionDriverName    org.postgresql.Driver
-    spark.hadoop.javax.jdo.option.ConnectionUserName      hive
-    spark.hadoop.javax.jdo.option.ConnectionPassword      hive
-    spark.hadoop.datanucleus.schema.autoCreateAll         true
-    spark.hive.metastore.schema.verification              false
-    spark.jars.packages                                   org.postgresql:postgresql:42.2.13
