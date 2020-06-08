@@ -10,8 +10,6 @@ build:
       context: .
       docker:
         dockerfile: ./.staroid/docker/interpreter/Dockerfile
-    - image: spark
-      context: ./.staroid/docker/spark/
   local:
     concurrency: 2
 deploy:
@@ -21,6 +19,7 @@ deploy:
       - .staroid/k8s/zeppelin-server.yaml
       - .staroid/k8s/data-volume.yaml
       - .staroid/k8s/postgres.yaml
+      - .staroid/k8s/spark-conf.yaml
 profiles:
   - name: prebuilt
     patches:
@@ -46,4 +45,5 @@ profiles:
           - .staroid/k8s/zeppelin-server.yaml
           - .staroid/k8s/data-volume.yaml
           - .staroid/k8s/postgres.yaml
+          - .staroid/k8s/spark-conf.yaml
   
