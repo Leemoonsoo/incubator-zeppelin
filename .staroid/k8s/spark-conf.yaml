@@ -1,0 +1,32 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: spark-conf
+data:
+  spark-defaults.conf: |
+    spark.sql.catalogImplementation                       hive
+    spark.hadoop.javax.jdo.option.ConnectionURL           jdbc:postgresql://metastore-postgres/hive
+    spark.hadoop.javax.jdo.option.ConnectionDriverName    org.postgresql.Driver
+    spark.hadoop.javax.jdo.option.ConnectionUserName      hive
+    spark.hadoop.javax.jdo.option.ConnectionPassword      hive
+    spark.hadoop.datanucleus.schema.autoCreateAll         true
+    spark.hive.metastore.schema.verification              false
+    spark.jars.packages                                   org.postgresql:postgresql:42.2.13
+    spark.kubernetes.executor.podTemplateFile             /spark-pod-template/executor-pod-template.yaml
+  image: opendatastudio/spark:v3.1.0-snapshot-20200607-02
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: spark-pod-template
+data:
+  executor-pod-template.yaml: |
+    apiVersion: v1
+    Kind: Pod
+    metadata:
+      labels:
+        template-label-key: executor-template-label-value
+    spec:
+      containers:
+        - name: executor-container
+          image: will-be-overwritten
