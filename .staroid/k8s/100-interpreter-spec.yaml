@@ -70,7 +70,10 @@ spec:
   initContainers:
   - name: spark-home-init
     image: {{zeppelin.k8s.spark.container.image}}
-    command: ["sh", "-c", "cp -r /opt/spark/* /spark/ && cp -r /spark-conf /spark/conf"]
+    command: ["sh", "-c", "cp -r /opt/spark/* /spark/ && /spark-conf/generate-spark-defaults.sh"]
+    envFrom:
+    - configMapRef:
+        name: hive-metastore-info
     volumeMounts:
     - name: spark-home
       mountPath: /spark
@@ -89,6 +92,7 @@ spec:
   - name: spark-conf-volume
     configMap:
       name: spark-conf
+      defaultMode: 0777
   - name: spark-pod-template-volume
     configMap:
       name: spark-pod-template
