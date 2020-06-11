@@ -5,14 +5,24 @@ metadata:
 data:
   spark-defaults.conf: |
     spark.sql.catalogImplementation                       hive
-    spark.hadoop.javax.jdo.option.ConnectionURL           jdbc:postgresql://metastore-postgres/hive
-    spark.hadoop.javax.jdo.option.ConnectionDriverName    org.postgresql.Driver
-    spark.hadoop.javax.jdo.option.ConnectionUserName      hive
-    spark.hadoop.javax.jdo.option.ConnectionPassword      hive
-    spark.hadoop.datanucleus.schema.autoCreateAll         true
-    spark.hive.metastore.schema.verification              false
     spark.jars.packages                                   org.postgresql:postgresql:42.2.13
     spark.kubernetes.executor.podTemplateFile             /spark-pod-template/executor-pod-template.yaml
+  generate-spark-defaults.sh: |
+    #!/bin/bash
+
+    mkdir -p /spark/conf
+    SPARK_DEFAULTS_CONF=/spark/conf/spark-defaults.conf
+
+    # initialize from configmap
+    cp /spark-conf/spark-defaults.conf $SPARK_DEFAULTS_CONF
+
+    # generate hive metastore connection info
+    echo $HIVE_METASTORE_NAMESPACE | grep not-imported > /dev/null
+    if [ $? -ne 0 ]; then
+      cat <<EOT >> $SPARK_DEFAULTS_CONF
+    spark.hadoop.hive.metastore.uris                             thrift://$HIVE_METASTORE_SERVICE.$HIVE_METASTORE_NAMESPACE:9083
+    EOT
+    fi
   image: opendatastudio/spark:v3.1.0-snapshot-20200607-02
 ---
 kind: ConfigMap
