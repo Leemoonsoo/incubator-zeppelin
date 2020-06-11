@@ -20,6 +20,7 @@ deploy:
       - .staroid/k8s/data-volume.yaml
       - .staroid/k8s/postgres.yaml
       - .staroid/k8s/spark-conf.yaml
+      - .staroid/k8s/hive-metastore.yaml
 profiles:
   - name: prebuilt
     patches:
@@ -46,4 +47,5 @@ profiles:
           - .staroid/k8s/data-volume.yaml
           - .staroid/k8s/postgres.yaml
           - .staroid/k8s/spark-conf.yaml
+          - .staroid/k8s/hive-metastore.yaml
   

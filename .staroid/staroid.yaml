@@ -6,8 +6,11 @@ ingress:
   - serviceName: zeppelin-server
     port: 8080
 deploy:
+  dependencies:
+  - project: open-datastudio/hive-metastore
+    level: OPTIONAL
   paramGroups:
-  - name: Advanced configurations
+  - name: Zeppelin server configurations
     collapsed: true
     params:
     - name: zeppelin-server memory
@@ -18,3 +21,12 @@ deploy:
       paths:
       - Pod:zeppelin-server:spec.containers[0].resources.requests.memory
       - Pod:zeppelin-server:spec.containers[0].resources.limits.memory
+  - name: Spark configurations
+    collapsed: true
+    params:
+    - name: spark-defaults
+      type: STRING
+      description: spark-defaults.conf
+      defaultValue: spark.sql.catalogImplementation
+      paths:
+      - ConfigMap:spark-conf:data["spark-defaults.conf"]

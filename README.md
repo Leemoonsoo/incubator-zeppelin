@@ -6,7 +6,7 @@
 
 ## Key features 🚀
 
-- Master snapshot
+- Latest version
 
     Access the latest features and improvements on the Apache Zeppelin, in a single click!
     No need to install or maintain Zeppelin to keep it up-to-dated.
@@ -16,6 +16,10 @@
 - Kubernetes mode (== Scalable)
 
     Zeppelin on Kubernetes is enabled by default. Each interpreter runs on their own container.
+
+- Spark 3.0
+
+    Comes with Spark 3.0.
 
 - Zero maintenance Spark Cluster
 
