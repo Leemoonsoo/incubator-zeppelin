@@ -27,6 +27,8 @@ deploy:
     - name: spark-defaults
       type: STRING
       description: spark-defaults.conf
-      defaultValue: spark.sql.catalogImplementation
+      defaultValue: |
+        spark.sql.catalogImplementation hive
+        # spark.jars.packages org.postgresql:postgresql:42.2.13
       paths:
       - ConfigMap:spark-conf:data["spark-defaults.conf"]
