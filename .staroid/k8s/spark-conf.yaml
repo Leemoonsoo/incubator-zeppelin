@@ -23,7 +23,7 @@ data:
     spark.hadoop.hive.metastore.uris  thrift://$HIVE_METASTORE_SERVICE.$HIVE_METASTORE_NAMESPACE:9083
     EOT
     fi
-  image: opendatastudio/spark:v3.1.0-snapshot-20200607-02
+  image: opendatastudio/spark:v3.1.0-snapshot-20200618-01
 ---
 kind: ConfigMap
 apiVersion: v1
