@@ -27,7 +27,7 @@ deploy:
     - name: spark-image
       type: STRING
       description: Spark docker image. https://hub.docker.com/repository/docker/opendatastudio/spark
-      defaultValue: opendatastudio/spark:v3.1.0-snapshot-20200618-01
+      defaultValue: opendatastudio/spark:v3.0.0
       paths:
       - ConfigMap:spark-conf:data["image"]
     - name: spark-defaults
@@ -35,6 +35,5 @@ deploy:
       description: spark-defaults.conf
       defaultValue: |
         spark.sql.catalogImplementation hive
-        # spark.jars.packages org.postgresql:postgresql:42.2.13
       paths:
       - ConfigMap:spark-conf:data["spark-defaults.conf"]
