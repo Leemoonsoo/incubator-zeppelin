@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: zeppelin-conf
+  name: zeppelin-initial-conf
 data:
   zeppelin-site.xml: |
     <?xml version="1.0"?>
