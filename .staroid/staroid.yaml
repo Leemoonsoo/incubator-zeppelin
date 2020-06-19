@@ -1,4 +1,6 @@
 apiVersion: beta/v1
+starRank:
+  rate: 1.2
 build:
   skaffold:
     file: .staroid/skaffold.yaml
@@ -30,10 +32,3 @@ deploy:
       defaultValue: opendatastudio/spark:v3.0.0
       paths:
       - ConfigMap:spark-conf:data["image"]
-    - name: spark-defaults
-      type: STRING
-      description: spark-defaults.conf
-      defaultValue: |
-        spark.sql.catalogImplementation hive
-      paths:
-      - ConfigMap:spark-conf:data["spark-defaults.conf"]

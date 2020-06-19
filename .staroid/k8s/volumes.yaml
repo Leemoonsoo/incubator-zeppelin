@@ -1,0 +1,31 @@
+# this stores config files and notebook
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: conf-pvc
+  annotations:
+    storage.staroid.com/scope: Instance
+    storage.staroid.com/file-manager: "2100:2100"
+spec:
+  accessModes:
+    - ReadWriteMany
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 1Gi
+---
+# this provides shared volume for small dataset to interpreter 
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: data-pvc
+  annotations:
+    storage.staroid.com/scope: Instance
+    storage.staroid.com/file-manager: "2100:2100"
+spec:
+  accessModes:
+    - ReadWriteMany
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 1Gi

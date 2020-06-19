@@ -1,17 +1,12 @@
 kind: ConfigMap
 apiVersion: v1
 metadata:
-  name: spark-conf
+  name: spark-initial-conf
 data:
   spark-defaults.conf: spark.sql.catalogImplementation                       hive
-  generate-spark-defaults.sh: |
+  runtime-initialize-spark-defaults.sh: |
     #!/bin/bash
-
-    mkdir -p /spark/conf
     SPARK_DEFAULTS_CONF=/spark/conf/spark-defaults.conf
-
-    # initialize from configmap
-    cp /spark-conf/spark-defaults.conf $SPARK_DEFAULTS_CONF
 
     # generate hive metastore connection info
     echo $HIVE_METASTORE_NAMESPACE | grep not-imported > /dev/null
@@ -24,19 +19,3 @@ data:
     EOT
     fi
   image: opendatastudio/spark:v3.0.0
----
-kind: ConfigMap
-apiVersion: v1
-metadata:
-  name: spark-pod-template
-data:
-  executor-pod-template.yaml: |
-    apiVersion: v1
-    Kind: Pod
-    metadata:
-      labels:
-        template-label-key: executor-template-label-value
-    spec:
-      containers:
-        - name: executor-container
-          image: will-be-overwritten

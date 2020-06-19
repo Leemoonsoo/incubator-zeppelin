@@ -17,8 +17,7 @@ deploy:
     manifests:
       - .staroid/k8s/zeppelin-conf.yaml
       - .staroid/k8s/zeppelin-server.yaml
-      - .staroid/k8s/data-volume.yaml
-      - .staroid/k8s/postgres.yaml
+      - .staroid/k8s/volumes.yaml
       - .staroid/k8s/spark-conf.yaml
       - .staroid/k8s/hive-metastore.yaml
 profiles:
@@ -44,8 +43,7 @@ profiles:
           - .staroid/k8s/minikube.yaml
           - .staroid/k8s/zeppelin-conf.yaml
           - .staroid/k8s/zeppelin-server.yaml
-          - .staroid/k8s/data-volume.yaml
-          - .staroid/k8s/postgres.yaml
+          - .staroid/k8s/volumes.yaml
           - .staroid/k8s/spark-conf.yaml
           - .staroid/k8s/hive-metastore.yaml
   
