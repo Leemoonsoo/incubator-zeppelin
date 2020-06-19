@@ -85,3 +85,52 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: default
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: file-manager
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: file-manager
+  template:
+    metadata:
+      labels:
+        app: file-manager
+    spec:
+      securityContext:
+        runAsUser: 2100
+        runAsGroup: 2100
+      containers:
+      - name: cloudcmd
+        image: coderaiser/cloudcmd:14.5.1-alpine
+        args: [ "--one-file-panel", "--root", "/mnt" ]
+        volumeMounts:
+          - name: conf-volume
+            mountPath: /mnt/conf-pvc
+          - name: data-volume
+            mountPath: /mnt/data-pvc
+        env:
+          - name: HOME
+            value: /
+      volumes:
+        - name: conf-volume
+          persistentVolumeClaim:
+            claimName: conf-pvc
+        - name: data-volume
+          persistentVolumeClaim:
+            claimName: data-pvc
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: file-manager
+spec:
+  ports:
+  - name: http
+    port: 8000
+    targetPort: 8000
+  selector:
+    app: file-manager

@@ -6,25 +6,36 @@ metadata:
     app: zeppelin-server
 spec:
   automountServiceAccountToken: true
+  securityContext:
+    runAsUser: 2100
+    runAsGroup: 2100
   initContainers:
-  - name: get-zeppelin-image-tag
+  - name: zeppelin-server-init
     image: zeppelin-server
     command: ["/bin/bash", "-c"]
     args:
     - |
-      [ "$(ls /notebook)" ] || cp -rv /zeppelin/notebook/* /notebook/ &&
+      mkdir -p /conf-volume/zeppelin/notebook && mkdir -p /conf-volume/zeppelin/conf && mkdir -p /conf-volume/spark/conf &&
+      [ "$(ls /conf-volume/zeppelin/notebook)" ] || cp -rv /zeppelin/notebook/* /conf-volume/zeppelin/notebook/ &&
+      [ "$(ls /conf-volume/zeppelin/conf)" ] || (cp -rv /zeppelin/conf/* /conf-volume/zeppelin/conf/ && cp -rvL /zeppelin-initial-conf/* /conf-volume/zeppelin/conf/) &&
+      [ "$(ls /conf-volume/spark/conf)" ] || cp -rvL /spark-initial-conf/spark-defaults.conf /conf-volume/spark/conf/ &&
       ZEPPELIN_IMAGE=`kubectl get pods zeppelin-server -o jsonpath="{..image}" | tr " " "\n" | grep "zeppelin-interpreter:" | head -1` &&
       echo "#!/bin/bash" >> /entrypoint/run.sh &&
-      echo "cp -f /zeppelin-conf/zeppelin-site.xml /zeppelin/conf/" >> /entrypoint/run.sh &&
       echo "export ZEPPELIN_K8S_CONTAINER_IMAGE=${ZEPPELIN_IMAGE}" >> /entrypoint/run.sh &&
       echo "export ZEPPELIN_JAVA_OPTS='-Dzeppelin.spark.enableSupportedVersionCheck=false -Dzeppelin.spark.uiWebUrl=https://p{{PORT}}-{{SERVICE_NAME}}--{{SERVICE_DOMAIN}}'" >> /entrypoint/run.sh &&
+      echo "rm -rf /zeppelin/conf && ln -s /conf-volume/zeppelin/conf /zeppelin/conf" >> /entrypoint/run.sh &&
+      echo "rm -rf /zeppelin/notebook && ln -s /conf-volume/zeppelin/notebook /zeppelin/notebook" >> /entrypoint/run.sh &&
       echo "/zeppelin/bin/zeppelin.sh" >> /entrypoint/run.sh &&
       chmod +x /entrypoint/run.sh
     volumeMounts:
     - name: entrypoint-volume
       mountPath: /entrypoint
-    - name: notebook-volume
-      mountPath: /notebook
+    - name: zeppelin-initial-conf-volume
+      mountPath: /zeppelin-initial-conf
+    - name: conf-volume
+      mountPath: /conf-volume
+    - name: spark-initial-conf-volume
+      mountPath: /spark-initial-conf
   - name: mount-zeppelin-interpreter-image-tag # mount container here so get-zeppelin-image-tag can get spark iamge tag using kubectl, see https://github.com/GoogleContainerTools/skaffold/issues/3269
     image: zeppelin-interpreter
     command: ["/bin/bash", "-c"]
@@ -65,7 +76,7 @@ spec:
     - name: ZEPPELIN_K8S_SPARK_CONTAINER_IMAGE
       valueFrom:
         configMapKeyRef:
-          name: spark-conf
+          name: spark-initial-conf
           key: image 
     - name: ZEPPELIN_K8S_SERVICE_NAME
       value: zeppelin-server
@@ -81,19 +92,20 @@ spec:
     volumeMounts:
     - name: entrypoint-volume
       mountPath: /entrypoint
-    - name: notebook-volume
-      mountPath: /zeppelin/notebook
-    - name: zeppelin-conf-volume
-      mountPath: /zeppelin-conf
+    - name: conf-volume
+      mountPath: /conf-volume
   volumes:
   - name: entrypoint-volume
     emptyDir: {}
-  - name: notebook-volume
+  - name: conf-volume # persistence storage for /zeppelin/conf
     persistentVolumeClaim:
-      claimName: notebook-pvc
-  - name: zeppelin-conf-volume
+      claimName: conf-pvc
+  - name: zeppelin-initial-conf-volume # initial configurations to override
     configMap:
-      name: zeppelin-conf
+      name: zeppelin-initial-conf
+  - name: spark-initial-conf-volume
+    configMap:
+      name: spark-initial-conf
 ---
 kind: Service
 apiVersion: v1
@@ -108,17 +120,3 @@ spec:
     port: 12320
   selector:
     app: zeppelin-server
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: notebook-pvc
-  annotations:
-    storage.staroid.com/scope: Instance # Instance, PerProject or PerProjectUser
-spec:
-  accessModes:
-    - ReadWriteMany
-  volumeMode: Filesystem
-  resources:
-    requests:
-      storage: 1Gi
