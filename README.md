@@ -55,13 +55,41 @@
     Fork this repository and launch your customized version on [Staroid](https://staroid.com). No complex setup required. Just connect your forked Github repository and push commits.
 
 
+## Spark configuration
+
+Driver and executors can be configured using conf interpreter
+
+```
+%spark.conf
+spark.driver.cores                                            2
+spark.driver.memory                                           8g
+spark.executor.cores                                          4
+spark.executor.memory                                         16g
+spark.executor.instances                                      3
+spark.kubernetes.executor.label.pod.staroid.com/isolation     dedicated
+spark.kubernetes.executor.label.pod.staroid.com/instance-type standard-4
+spark.kubernetes.executor.label.pod.staroid.com/spot          true
+```
+
+### TestDrive
+
+TestDrive namespace quota is smaller. So need to use smaller cores and memory.
+
+```
+%spark.conf
+spark.driver.cores                                            1
+spark.driver.memory                                           1g
+spark.executor.cores                                          1
+spark.executor.memory                                         1g
+```
+
+
 ## Branch
 
-| Branch |  Zeppelin version|
+| Branch | Zeppelin version |
 | ------ | --------------- |
 | master-snapshot | latest master |
 
-* Synced with Zeppelin master branch in 2-3 times a week.
 
 ## Development
 
