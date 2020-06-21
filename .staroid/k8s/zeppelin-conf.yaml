@@ -1,3 +1,5 @@
+# This ConfigMap will overwrite contents in /zeppelin/conf dir at the first launch.
+# It does not applied in subsequent launches, so any configuration change after the first launch is preserved.
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -8,3 +10,21 @@ data:
     <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
     <configuration>
     </configuration>
+---
+# ZEPPELIN_JAVA_OPTS env variable to apply on zeppelin-server
+#
+# Note that 'spark.**' properties only sets default value of Spark Interpreter Setting.
+# Once interpreter setting is initialized with theses default values, they're stored in the file (conf/interpreter.json).
+# From subsequent launch, interpreter setting is read from the file, not the jvm properties here.
+#
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: zeppelin-server-jvm-properties
+data:
+  ZEPPELIN_JAVA_OPTS: >-
+    -Dzeppelin.spark.enableSupportedVersionCheck=false
+    -Dspark.executor.cores=4
+    -Dspark.executor.memory=16g
+    -Dspark.driver.cores=2
+    -Dspark.driver.memory=8g
