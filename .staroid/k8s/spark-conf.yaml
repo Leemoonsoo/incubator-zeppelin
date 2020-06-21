@@ -3,7 +3,38 @@ apiVersion: v1
 metadata:
   name: spark-initial-conf
 data:
-  spark-defaults.conf: spark.sql.catalogImplementation                       hive
+  spark-defaults.conf: |
+    spark.sql.catalogImplementation                               hive
+
+    # 'dedicated' for dedicated kubernetes node. 'dedicated' or 'sandboxed'
+    spark.kubernetes.executor.label.pod.staroid.com/isolation     dedicated
+
+    # 'standard-2', 'standard-4', 'standard-8' available. Note that spark.executor.cores|memory need to be changed accordingly.
+    spark.kubernetes.executor.label.pod.staroid.com/instance-type standard-4
+
+    # 'true' for spot instance. 'true' or 'false'
+    spark.kubernetes.executor.label.pod.staroid.com/spot          true
+
+    #
+    # Configuration apply order is
+    #
+    #   Inline conf interpreter (%spark.conf) > Interpreter setting > spark-defaults.conf
+    #
+    # Therefore, following spark properties are defined in Interpreter settings (plus any spark property that user adds later)
+    # are NOT effective in this file. They need to be changed from Interpreter Setting or conf interpreter.
+    #
+    # spark.executor.cores
+    # spark.executor.memory
+    # spark.driver.cores
+    # spark.driver.memory
+    # spark.app.name
+    # spark.files
+    # spark.jars
+    # spark.jars.packages
+    #
+    # Default value of Interpreter setting can be changed using jvm property.
+    # See 'zeppelin-server-jvm-properties' ConfigMap in zeppelin-conf.yaml.
+    #
   runtime-initialize-spark-defaults.sh: |
     #!/bin/bash
     SPARK_DEFAULTS_CONF=/spark/conf/spark-defaults.conf
