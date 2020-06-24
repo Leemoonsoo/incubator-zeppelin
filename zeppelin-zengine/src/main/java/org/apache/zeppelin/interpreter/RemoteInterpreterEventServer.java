@@ -44,11 +44,13 @@ import org.apache.zeppelin.interpreter.thrift.RemoteInterpreterResultMessage;
 import org.apache.zeppelin.interpreter.thrift.RemoteInterpreterService;
 import org.apache.zeppelin.interpreter.thrift.RunParagraphsEvent;
 import org.apache.zeppelin.interpreter.thrift.ServiceException;
+import org.apache.zeppelin.notebook.Note;
 import org.apache.zeppelin.resource.RemoteResource;
 import org.apache.zeppelin.resource.Resource;
 import org.apache.zeppelin.resource.ResourceId;
 import org.apache.zeppelin.resource.ResourcePool;
 import org.apache.zeppelin.resource.ResourceSet;
+import org.apache.zeppelin.user.AuthenticationInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -252,6 +254,18 @@ public class RemoteInterpreterEventServer implements RemoteInterpreterEventServi
     }
     interpreterGroup.getAngularObjectRegistry().add(angularObject.getName(),
         angularObject.get(), angularObject.getNoteId(), angularObject.getParagraphId());
+    
+    if (angularObject.getNoteId() != null) {
+      try {
+        Note note = interpreterSettingManager.getNotebook().getNote(angularObject.getNoteId());
+        if (note != null) {
+          note.addOrUpdateAngularObject(intpGroupId, angularObject);
+          interpreterSettingManager.getNotebook().saveNote(note, AuthenticationInfo.ANONYMOUS);
+        }
+      } catch (IOException e) {
+        LOGGER.error("Fail to get note: {}", angularObject.getNoteId());
+      }
+    }
   }
 
   @Override
@@ -270,6 +284,18 @@ public class RemoteInterpreterEventServer implements RemoteInterpreterEventServi
           angularObject.get(), true, false);
     } else {
       localAngularObject.set(angularObject.get());
+    }
+
+    if (angularObject.getNoteId() != null) {
+      try {
+        Note note = interpreterSettingManager.getNotebook().getNote(angularObject.getNoteId());
+        if (note != null) {
+          note.addOrUpdateAngularObject(intpGroupId, angularObject);
+          interpreterSettingManager.getNotebook().saveNote(note, AuthenticationInfo.ANONYMOUS);
+        }
+      } catch (IOException e) {
+        LOGGER.error("Fail to get note: {}", angularObject.getNoteId());
+      }
     }
   }
 
