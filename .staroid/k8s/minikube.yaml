@@ -1,0 +1,136 @@
+---
+# see https://docs.staroid.com/references/staroid-envs.html
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: staroid-envs
+data:
+  STAROID_PROJECT_BRANCH: master
+  STAROID_PROJECT_COMMIT_HASH: abc
+  STAROID_PROJECT_NAME: open-datascience
+  STAROID_SERVICE_DOMAIN: localhost
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv0001
+spec:
+  accessModes:
+    - ReadWriteMany
+  capacity:
+    storage: 5Gi
+  hostPath:
+    path: ./minikube-pv
+---
+apiVersion: policy/v1beta1
+kind: PodSecurityPolicy
+metadata:
+  name: staroid-psp
+spec:
+  privileged: false
+  allowPrivilegeEscalation: false
+  hostNetwork: false
+  hostIPC: false
+  hostPID: false
+  readOnlyRootFilesystem: false
+  runAsUser:
+    rule: 'MustRunAsNonRoot'
+  runAsGroup:
+    rule: 'MustRunAs'
+    ranges:
+    - min: 1
+      max: 65535
+  seLinux:
+    rule: 'RunAsAny'
+  supplementalGroups:
+    rule: 'MustRunAs'
+    ranges:
+    - min: 1
+      max: 65535
+  fsGroup:
+    rule: 'RunAsAny'
+  volumes:
+  - 'configMap'
+  - 'emptyDir'
+  - 'secret'
+  - 'persistentVolumeClaim'    
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: staroid-role
+rules:
+- apiGroups: [""]
+  resources: ["pods", "pods/log", "pods/exec", "pods/binding", "services", "secrets", "configmaps", "persistentvolumeclaims"]
+  verbs: ["create", "get", "update", "patch", "list", "delete", "watch"]
+- apiGroups: ["apps"]
+  resources: ["deployments"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+- apiGroups: ["batch"]
+  resources: ["jobs", "cronjobs"]
+  verbs: ["create", "get", "update", "patch", "list", "delete", "watch"]
+- apiGroups: ['policy']
+  resources: ['podsecuritypolicies']
+  verbs:     ['use']
+  resourceNames: ['crt-user-psp']
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: staroid-rolebinding
+roleRef:
+  kind: Role
+  name: staroid-role
+  apiGroup: rbac.authorization.k8s.io
+subjects:
+- kind: ServiceAccount
+  name: default
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: file-manager
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: file-manager
+  template:
+    metadata:
+      labels:
+        app: file-manager
+    spec:
+      securityContext:
+        runAsUser: 2100
+        runAsGroup: 2100
+      containers:
+      - name: cloudcmd
+        image: coderaiser/cloudcmd:14.5.1-alpine
+        args: [ "--one-file-panel", "--root", "/mnt" ]
+        volumeMounts:
+          - name: conf-volume
+            mountPath: /mnt/conf-pvc
+          - name: data-volume
+            mountPath: /mnt/data-pvc
+        env:
+          - name: HOME
+            value: /
+      volumes:
+        - name: conf-volume
+          persistentVolumeClaim:
+            claimName: conf-pvc
+        - name: data-volume
+          persistentVolumeClaim:
+            claimName: data-pvc
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: file-manager
+spec:
+  ports:
+  - name: http
+    port: 8000
+    targetPort: 8000
+  selector:
+    app: file-manager
