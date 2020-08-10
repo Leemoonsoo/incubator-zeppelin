@@ -4,7 +4,24 @@ metadata:
   name: spark-initial-conf
 data:
   spark-defaults.conf: |
-    spark.sql.catalogImplementation                               hive
+    # This configuration is copied to persistent conf volume only if not exists (i.e. initial deploy).
+    # See zeppelin-server.yaml initContainers args.
+    #
+
+    spark.dynamicAllocation.enabled                               true
+    spark.dynamicAllocation.minExecutors                          1
+    spark.dynamicAllocation.maxExecutors                          10
+    spark.dynamicAllocation.initialExecutors                      1
+    spark.dynamicAllocation.shuffleTracking.enabled               true
+    spark.dynamicAllocation.executorIdleTimeout                   600s
+    spark.dynamicAllocation.schedulerBacklogTimeout               60s
+    spark.kubernetes.allocation.batch.size                        20
+    spark.scheduler.mode                                          FAIR
+    spark.serializer                                              org.apache.spark.serializer.KryoSerializer
+    spark.sql.adaptive.enabled                                    true
+    spark.sql.adaptive.coalescePartitions.enabled                 true
+
+    # SKE options ---------
 
     # 'dedicated' for dedicated kubernetes node. 'dedicated' or 'sandboxed'
     spark.kubernetes.executor.label.pod.staroid.com/isolation     dedicated
@@ -20,7 +37,7 @@ data:
     #
     #   Inline conf interpreter (%spark.conf) > Interpreter setting > spark-defaults.conf
     #
-    # Therefore, following spark properties are defined in Interpreter settings (plus any spark property that user adds later)
+    # Therefore, following spark properties already defined in Interpreter settings (plus any spark property that user adds later)
     # are NOT effective in this file. They need to be changed from Interpreter Setting or conf interpreter.
     #
     # spark.executor.cores
