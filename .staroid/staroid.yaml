@@ -29,6 +29,6 @@ deploy:
     - name: spark-image
       type: STRING
       description: Spark docker image. https://hub.docker.com/repository/docker/opendatastudio/spark
-      defaultValue: opendatastudio/spark:v3.0.0
+      defaultValue: opendatastudio/spark-py:v3.0.0-staroid
       paths:
       - ConfigMap:spark-initial-conf:data["image"]
