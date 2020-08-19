@@ -15,7 +15,7 @@ ENV MAVEN_CLI_OPTS="--no-transfer-progress"
 WORKDIR /zeppelin
 COPY ./ /zeppelin/
 
-RUN mvn -B -T 2C package -DskipTests -Pscala-2.11 -pl ':spark-interpreter,:zeppelin-spark-dependencies,:spark1-shims,:spark2-shims,:spark-scala-2.12,:spark-scala-2.11,:spark-scala-2.10,python,markdown,shell,jdbc' -am
+RUN mvn -B -T 2C package -DskipTests -Pscala-2.11 -pl ':spark-interpreter,:zeppelin-spark-dependencies,:spark1-shims,:spark2-shims,:spark-scala-2.12,:spark-scala-2.11,:spark-scala-2.10,python,markdown,shell,jdbc,flink' -am
 
 # container image
 FROM ubuntu:18.04
