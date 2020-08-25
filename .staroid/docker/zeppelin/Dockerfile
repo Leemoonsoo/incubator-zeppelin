@@ -61,6 +61,9 @@ COPY --chown=zeppelin:zeppelin --from=builder /zeppelin/zeppelin-distribution/ta
 COPY --chown=zeppelin:zeppelin ./.staroid/conf/log4j.properties /zeppelin/conf/log4j.properties
 COPY --chown=zeppelin:zeppelin ./.staroid/k8s/100-interpreter-spec.yaml /zeppelin/k8s/interpreter/100-interpreter-spec.yaml
 
+RUN rm -rf /zeppelin/notebook
+COPY --chown=zeppelin:zeppelin ./.staroid/notebook /zeppelin/notebook
+
 EXPOSE 8080
 
 WORKDIR ${Z_HOME}
