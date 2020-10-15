@@ -1,0 +1,714 @@
+﻿{
+  "paragraphs": [
+    {
+      "text": "%md\n## Welcome to Open Data Studio Zeppelin.\n##### This is a live tutorial, you can run the code yourself. (Shift-Enter to Run)\n\nOpen data studio Zeppelin includes Spark, Python and JDBC interpreters.\nZeppelin configured in Kubernetes mode, that means each interpreter will run in their own container (Pod).",
+      "user": "anonymous",
+      "dateUpdated": "2020-08-25T03:52:53+0000",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "fontSize": 9,
+        "results": [
+          {
+            "graph": {
+              "mode": "table",
+              "height": 300,
+              "optionOpen": false,
+              "keys": [],
+              "values": [],
+              "groups": [],
+              "scatter": {}
+            }
+          }
+        ],
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "<div class=\"markdown-body\">\n<h2>Welcome to Open Data Studio Zeppelin.</h2>\n<h5>This is a live tutorial, you can run the code yourself. (Shift-Enter to Run)</h5>\n<p>Open data studio Zeppelin includes Spark, Python and JDBC interpreters.<br />\nZeppelin configured in Kubernetes mode, that means each interpreter will run in their own container (Pod).</p>\n\n</div>"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1598326018729_2038056247",
+      "id": "20150213-231621_168813393",
+      "dateCreated": "2020-08-25T03:26:58+0000",
+      "dateStarted": "2020-08-25T03:52:53+0000",
+      "dateFinished": "2020-08-25T03:52:53+0000",
+      "status": "FINISHED",
+      "focus": true,
+      "$$hashKey": "object:184"
+    },
+    {
+      "text": "%md\n## Python interpreter\n\nLet's begin with Python interpreter. Python interpreter can be selected with `%python` in the beginning of the paragraph.\nPython interpreter uses ipython kernel underneath, so you can use ipython features. (such as shell command `!<command>`)\n\nInitial run may take some time as interpreter need to be created in a new Pod and creating Pod sometimes trigger provisioning new node in Kubernetes.",
+      "user": "anonymous",
+      "dateUpdated": "2020-08-25T03:52:42+0000",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "<div class=\"markdown-body\">\n<h2>Python interpreter</h2>\n<p>Let&rsquo;s begin with Python interpreter. Python interpreter can be selected with <code>%python</code> in the beginning of the paragraph.<br />\nPython interpreter uses ipython kernel underneath, so you can use ipython features. (such as shell command <code>!&lt;command&gt;</code>)</p>\n<p>Initial run may take some time as interpreter need to be created in a new Pod and creating Pod sometimes trigger provisioning new node in Kubernetes.</p>\n\n</div>"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1598326445037_1069987205",
+      "id": "paragraph_1598326445037_1069987205",
+      "dateCreated": "2020-08-25T03:34:05+0000",
+      "dateStarted": "2020-08-25T03:52:42+0000",
+      "dateFinished": "2020-08-25T03:52:42+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:185"
+    },
+    {
+      "text": "%python\n# install matplotlib. The first run may take some time, because interpreter will be initiated in a new Pod\n!pip install matplotlib",
+      "user": "anonymous",
+      "dateUpdated": "2020-08-25T03:46:22+0000",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1598326047182_587259897",
+      "id": "paragraph_1598326047182_587259897",
+      "dateCreated": "2020-08-25T03:27:27+0000",
+      "dateStarted": "2020-08-25T03:46:23+0000",
+      "dateFinished": "2020-08-25T03:46:46+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:186"
+    },
+    {
+      "text": "%python\n# display something\nimport matplotlib.pyplot as plt\nplt.plot([1, 2, 3])",
+      "user": "anonymous",
+      "dateUpdated": "2020-08-25T03:47:23+0000",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1598326483536_1275100479",
+      "id": "paragraph_1598326483536_1275100479",
+      "dateCreated": "2020-08-25T03:34:43+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:187",
+      "dateFinished": "2020-08-25T03:47:25+0000",
+      "dateStarted": "2020-08-25T03:47:24+0000"
+    },
+    {
+      "text": "%md\n### Data volume. Upload and Download.\n\nAt this point, you want to try with your own data. right?\nYou can upload data using file browser on Staroid management console.\n\nStart a file browser for `data-pvc` volume.\n\n![](https://user-images.githubusercontent.com/1540981/91121184-215f0600-e64c-11ea-8cc4-a7c683b99050.png)\n\nOpen a file browser ui and drag&drop to upload (&download) data from your computer.\n\n![](https://user-images.githubusercontent.com/1540981/91121482-ba8e1c80-e64c-11ea-929e-3f14f707287b.png)\n\nYou'll able to find your data under `/data` directory.\n\nNote that files and changes in all other directory will not be preserved after restart.\nHowever, `/data` and `/zeppelin/conf/` directory mount persistent volume so data in these directories will be preserved.",
+      "user": "anonymous",
+      "dateUpdated": "2020-08-25T04:04:26+0000",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1598327271665_133352731",
+      "id": "paragraph_1598327271665_133352731",
+      "dateCreated": "2020-08-25T03:47:51+0000",
+      "status": "FINISHED",
+      "focus": true,
+      "$$hashKey": "object:1771",
+      "dateFinished": "2020-08-25T04:04:26+0000",
+      "dateStarted": "2020-08-25T04:04:26+0000",
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "<div class=\"markdown-body\">\n<h3>Data volume. Upload and Download.</h3>\n<p>At this point, you want to try with your own data. right?<br />\nYou can upload data using file browser on Staroid management console.</p>\n<p>Start a file browser for <code>data-pvc</code> volume.</p>\n<p><img src=\"https://user-images.githubusercontent.com/1540981/91121184-215f0600-e64c-11ea-8cc4-a7c683b99050.png\" alt=\"\" /></p>\n<p>Open a file browser ui and drag&amp;drop to upload (&amp;download) data from your computer.</p>\n<p><img src=\"https://user-images.githubusercontent.com/1540981/91121482-ba8e1c80-e64c-11ea-929e-3f14f707287b.png\" alt=\"\" /></p>\n<p>You&rsquo;ll able to find your data under <code>/data</code> directory.</p>\n<p>Note that files and changes in all other directory will not be preserved after restart.<br />\nHowever, <code>/data</code> and <code>/zeppelin/conf/</code> directory mount persistent volume so data in these directories will be preserved.</p>\n\n</div>"
+          }
+        ]
+      }
+    },
+    {
+      "text": "%python\n# check your files in /data directory\n!ls -al /data",
+      "user": "anonymous",
+      "dateUpdated": "2020-08-25T04:05:14+0000",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1598328038554_564846160",
+      "id": "paragraph_1598328038554_564846160",
+      "dateCreated": "2020-08-25T04:00:38+0000",
+      "status": "FINISHED",
+      "focus": true,
+      "$$hashKey": "object:2081",
+      "dateFinished": "2020-08-25T04:02:52+0000",
+      "dateStarted": "2020-08-25T04:02:40+0000"
+    },
+    {
+      "text": "%md\n## Spark\n\nNow let's try use Spark interpreter. Spark interpreter will create its own container (Pod).\nPython interpreter we're previously running shares nothing but shared volume `/data` and `/zeppelin/conf` directory.\n\nThere're two different possible Spark configuration here. Run one of two configuration below.\n\n### Local mode\nOnly one Pod is created for Spark interpreter and both Spark Driver and a Spark Executor is running in the same pod. Suitable for smaller dataset.\n\n### Cluster mode (default)\nIn cluster mode, Spark interpreter create a Pod that runs Spark Driver and multiple executors are created in their own separate Pods.\nMore suitable for processing large data.",
+      "user": "anonymous",
+      "dateUpdated": "2020-08-25T04:13:22+0000",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1598328318051_530330614",
+      "id": "paragraph_1598328318051_530330614",
+      "dateCreated": "2020-08-25T04:05:18+0000",
+      "status": "FINISHED",
+      "focus": true,
+      "$$hashKey": "object:2264",
+      "dateFinished": "2020-08-25T04:13:22+0000",
+      "dateStarted": "2020-08-25T04:13:22+0000",
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "<div class=\"markdown-body\">\n<h2>Spark</h2>\n<p>Now let&rsquo;s try use Spark interpreter. Spark interpreter will create its own container (Pod).<br />\nPython interpreter we&rsquo;re previously running shares nothing but shared volume <code>/data</code> and <code>/zeppelin/conf</code> directory.</p>\n<p>There&rsquo;re two different possible Spark configuration here. Run one of two configuration below.</p>\n<h3>Local mode</h3>\n<p>Only one Pod is created for Spark interpreter and both Spark Driver and a Spark Executor is running in the same pod. Suitable for smaller dataset.</p>\n<h3>Cluster mode (default)</h3>\n<p>In cluster mode, Spark interpreter create a Pod that runs Spark Driver and multiple executors are created in their own separate Pods.<br />\nMore suitable for processing large data.</p>\n\n</div>"
+          }
+        ]
+      }
+    },
+    {
+      "text": "%spark.conf\n\n# Local mode configuration\nspark.master local[*]",
+      "user": "anonymous",
+      "dateUpdated": "2020-08-25T04:12:48+0000",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "text",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 6,
+        "editorMode": "ace/mode/text",
+        "fontSize": 9,
+        "editorHide": false,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1598328625081_273693106",
+      "id": "paragraph_1598328625081_273693106",
+      "dateCreated": "2020-08-25T04:10:25+0000",
+      "status": "FINISHED",
+      "focus": true,
+      "$$hashKey": "object:2357",
+      "dateFinished": "2020-08-25T04:12:51+0000",
+      "dateStarted": "2020-08-25T04:12:51+0000",
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      }
+    },
+    {
+      "text": "%spark.conf\n\n# Cluster mode configuration\nspark.driver.cores                                            2\nspark.driver.memory                                           8g\nspark.executor.cores                                          4\nspark.executor.memory                                         16g\nspark.executor.instances                                      3\nspark.kubernetes.executor.label.pod.staroid.com/isolation     dedicated\nspark.kubernetes.executor.label.pod.staroid.com/instance-type standard-4\nspark.kubernetes.executor.label.pod.staroid.com/spot          true",
+      "user": "anonymous",
+      "dateUpdated": "2020-08-25T04:14:49+0000",
+      "config": {
+        "editorSetting": {
+          "language": "text",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 6,
+        "editorMode": "ace/mode/text",
+        "fontSize": 9,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1598328632376_1442058430",
+      "id": "paragraph_1598328632376_1442058430",
+      "dateCreated": "2020-08-25T04:10:32+0000",
+      "status": "READY",
+      "focus": true,
+      "$$hashKey": "object:2430"
+    },
+    {
+      "title": "Load data into table",
+      "text": "import org.apache.commons.io.IOUtils\nimport java.net.URL\nimport java.nio.charset.Charset\n\n// Zeppelin creates and injects sc (SparkContext) and sqlContext (HiveContext or SqlContext)\n// So you don't need create them manually\n\n// load bank data\nval bankText = sc.parallelize(\n    IOUtils.toString(\n        new URL(\"https://s3.amazonaws.com/apache-zeppelin/tutorial/bank/bank.csv\"),\n        Charset.forName(\"utf8\")).split(\"\\n\"))\n\ncase class Bank(age: Integer, job: String, marital: String, education: String, balance: Integer)\n\nval bank = bankText.map(s => s.split(\";\")).filter(s => s(0) != \"\\\"age\\\"\").map(\n    s => Bank(s(0).toInt, \n            s(1).replaceAll(\"\\\"\", \"\"),\n            s(2).replaceAll(\"\\\"\", \"\"),\n            s(3).replaceAll(\"\\\"\", \"\"),\n            s(5).replaceAll(\"\\\"\", \"\").toInt\n        )\n).toDF()\nbank.registerTempTable(\"bank\")",
+      "user": "anonymous",
+      "dateUpdated": "2020-08-25T04:15:23+0000",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "title": true,
+        "results": [
+          {
+            "graph": {
+              "mode": "table",
+              "height": 300,
+              "optionOpen": false
+            }
+          }
+        ],
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1598326018730_1983079634",
+      "id": "20150210-015259_1403135953",
+      "dateCreated": "2020-08-25T03:26:58+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:188",
+      "dateFinished": "2020-08-25T04:19:15+0000",
+      "dateStarted": "2020-08-25T04:15:24+0000"
+    },
+    {
+      "text": "%sql \nselect age, count(1) value\nfrom bank \nwhere age < 30 \ngroup by age \norder by age",
+      "user": "anonymous",
+      "dateUpdated": "2020-08-25T03:26:58+0000",
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 4,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9,
+        "results": [
+          {
+            "graph": {
+              "mode": "multiBarChart",
+              "height": 366,
+              "optionOpen": false,
+              "setting": {
+                "multiBarChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                }
+              },
+              "commonSetting": {},
+              "keys": [
+                {
+                  "name": "age",
+                  "index": 0,
+                  "aggr": "sum"
+                }
+              ],
+              "groups": [],
+              "values": [
+                {
+                  "name": "value",
+                  "index": 1,
+                  "aggr": "sum"
+                }
+              ]
+            },
+            "helium": {}
+          }
+        ],
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1598326018730_1058677578",
+      "id": "20150210-015302_1492795503",
+      "dateCreated": "2020-08-25T03:26:58+0000",
+      "status": "READY",
+      "$$hashKey": "object:189"
+    },
+    {
+      "text": "%sql \nselect age, count(1) value \nfrom bank \nwhere age < ${maxAge=30} \ngroup by age \norder by age",
+      "user": "anonymous",
+      "dateUpdated": "2020-08-25T03:26:58+0000",
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 4,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9,
+        "results": [
+          {
+            "graph": {
+              "mode": "multiBarChart",
+              "height": 294,
+              "optionOpen": false,
+              "setting": {
+                "multiBarChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                }
+              },
+              "commonSetting": {},
+              "keys": [
+                {
+                  "name": "age",
+                  "index": 0,
+                  "aggr": "sum"
+                }
+              ],
+              "groups": [],
+              "values": [
+                {
+                  "name": "value",
+                  "index": 1,
+                  "aggr": "sum"
+                }
+              ]
+            },
+            "helium": {}
+          }
+        ],
+        "enabled": true
+      },
+      "settings": {
+        "params": {
+          "maxAge": "35"
+        },
+        "forms": {
+          "maxAge": {
+            "type": "TextBox",
+            "name": "maxAge",
+            "defaultValue": "30",
+            "hidden": false,
+            "$$hashKey": "object:411"
+          }
+        }
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1598326018730_356798320",
+      "id": "20150212-145404_867439529",
+      "dateCreated": "2020-08-25T03:26:58+0000",
+      "status": "READY",
+      "$$hashKey": "object:190"
+    },
+    {
+      "text": "%sql \nselect age, count(1) value \nfrom bank \nwhere marital=\"${marital=single,single|divorced|married}\" \ngroup by age \norder by age",
+      "user": "anonymous",
+      "dateUpdated": "2020-08-25T03:26:58+0000",
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 4,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9,
+        "runOnSelectionChange": true,
+        "results": [
+          {
+            "graph": {
+              "mode": "stackedAreaChart",
+              "height": 280,
+              "optionOpen": false,
+              "setting": {
+                "stackedAreaChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                }
+              },
+              "commonSetting": {},
+              "keys": [
+                {
+                  "name": "age",
+                  "index": 0,
+                  "aggr": "sum"
+                }
+              ],
+              "groups": [],
+              "values": [
+                {
+                  "name": "value",
+                  "index": 1,
+                  "aggr": "sum"
+                }
+              ]
+            },
+            "helium": {}
+          }
+        ],
+        "enabled": true
+      },
+      "settings": {
+        "params": {
+          "marital": "single"
+        },
+        "forms": {
+          "marital": {
+            "type": "Select",
+            "options": [
+              {
+                "value": "single",
+                "$$hashKey": "object:2628"
+              },
+              {
+                "value": "divorced",
+                "$$hashKey": "object:2629"
+              },
+              {
+                "value": "married",
+                "$$hashKey": "object:2630"
+              }
+            ],
+            "name": "marital",
+            "defaultValue": "single",
+            "hidden": false,
+            "$$hashKey": "object:2617"
+          }
+        }
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1598326018730_928127802",
+      "id": "20150213-230422_1600658137",
+      "dateCreated": "2020-08-25T03:26:58+0000",
+      "status": "READY",
+      "$$hashKey": "object:191"
+    },
+    {
+      "text": "%md\n## Done!\n\nYou can try create your own notebook. When you need help, please reach out to\n\n - [Zeppelin documentation](http://zeppelin.apache.org/docs/snapshot/)\n - [Zeppelin community](http://zeppelin.apache.org/community.html#mailing-list)\n - open-datastudio/zeppelin [issue tracker](https://github.com/open-datastudio/zeppelin/issues)\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-08-25T04:18:37+0000",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "fontSize": 9,
+        "results": [
+          {
+            "graph": {
+              "mode": "table",
+              "height": 300,
+              "optionOpen": false
+            }
+          }
+        ],
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "<div class=\"markdown-body\">\n<h2>Done!</h2>\n<p>You can try create your own notebook. When you need help, please reach out to</p>\n<ul>\n<li><a href=\"http://zeppelin.apache.org/docs/snapshot/\">Zeppelin documentation</a></li>\n<li><a href=\"http://zeppelin.apache.org/community.html#mailing-list\">Zeppelin community</a></li>\n<li>open-datastudio/zeppelin <a href=\"https://github.com/open-datastudio/zeppelin/issues\">issue tracker</a></li>\n</ul>\n\n</div>"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1598326018731_163568332",
+      "id": "20150213-230428_1231780373",
+      "dateCreated": "2020-08-25T03:26:58+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:192",
+      "dateFinished": "2020-08-25T04:18:37+0000",
+      "dateStarted": "2020-08-25T04:18:37+0000"
+    },
+    {
+      "user": "anonymous",
+      "dateUpdated": "2020-08-25T03:26:58+0000",
+      "config": {
+        "colWidth": 12,
+        "fontSize": 9,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1598326018731_1493381053",
+      "id": "20150703-133047_853701097",
+      "dateCreated": "2020-08-25T03:26:58+0000",
+      "status": "READY",
+      "$$hashKey": "object:194"
+    }
+  ],
+  "name": "Welcome",
+  "id": "2FGVFA12N",
+  "defaultInterpreterGroup": "spark",
+  "version": "0.9.0-SNAPSHOT",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {},
+  "config": {
+    "isZeppelinNotebookCronEnable": false,
+    "looknfeel": "default",
+    "personalizedMode": "false"
+  },
+  "info": {},
+  "path": "/Welcome"
+}

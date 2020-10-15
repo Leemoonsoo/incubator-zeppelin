@@ -1,0 +1,34 @@
+apiVersion: beta/v1
+starRank:
+  rate: 1.2
+build:
+  skaffold:
+    file: .staroid/skaffold.yaml
+ingress:
+  - serviceName: zeppelin-server
+    port: 8080
+deploy:
+  dependencies:
+  - project: open-datastudio/hive-metastore
+    level: OPTIONAL
+  paramGroups:
+  - name: Zeppelin server configurations
+    collapsed: true
+    params:
+    - name: zeppelin-server memory
+      type: STRING
+      description: Server daemon memory (e.g. 2Gi, 1500Mi)
+      defaultValue: 2Gi
+      pattern: "[0-9]+[GM]i"
+      paths:
+      - Pod:zeppelin-server:spec.containers[0].resources.requests.memory
+      - Pod:zeppelin-server:spec.containers[0].resources.limits.memory
+  - name: Spark configurations
+    collapsed: true
+    params:
+    - name: spark-image
+      type: STRING
+      description: Spark docker image. https://hub.docker.com/repository/docker/opendatastudio/spark
+      defaultValue: opendatastudio/spark-py:v3.0.1-staroid-20200908-01
+      paths:
+      - ConfigMap:spark-initial-conf:data["image"]
